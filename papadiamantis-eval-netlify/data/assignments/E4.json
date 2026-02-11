@@ -1,0 +1,943 @@
+{
+  "assignment_id": "pap_eval_seed42_m4_pairs24",
+  "expert_id": "E4",
+  "created_at": "AUTO",
+  "tasks": [
+    {
+      "type": "cluster",
+      "clustering_id": "A",
+      "cluster_id": "4",
+      "items": [
+        {
+          "doc_id": "1934_stomegagialo.txt",
+          "title": "1934_stomegagialo.txt"
+        },
+        {
+          "doc_id": "1891_i_mavromatilou.txt",
+          "title": "1891_i_mavromatilou.txt"
+        },
+        {
+          "doc_id": "1906_anthostougialou.txt",
+          "title": "1906_anthostougialou.txt"
+        },
+        {
+          "doc_id": "1899_toeniafsionthyma.txt",
+          "title": "1899_toeniafsionthyma.txt"
+        }
+      ],
+      "task_id": "E4_0001"
+    },
+    {
+      "type": "cluster",
+      "clustering_id": "B",
+      "cluster_id": "12",
+      "items": [
+        {
+          "doc_id": "1926_tozontanokivoyrimou.txt",
+          "title": "1926_tozontanokivoyrimou.txt"
+        },
+        {
+          "doc_id": "1892_i_vlaxopoula.txt",
+          "title": "1892_i_vlaxopoula.txt"
+        },
+        {
+          "doc_id": "1888_ypiretria.txt",
+          "title": "1888_ypiretria.txt"
+        },
+        {
+          "doc_id": "1905_o_pedarfanos.txt",
+          "title": "1905_o_pedarfanos.txt"
+        }
+      ],
+      "task_id": "E4_0002"
+    },
+    {
+      "type": "cluster",
+      "clustering_id": "B",
+      "cluster_id": "8",
+      "items": [
+        {
+          "doc_id": "1906_totyflosokaki.txt",
+          "title": "1906_totyflosokaki.txt"
+        },
+        {
+          "doc_id": "1907_i_kaltsatisnoenas.txt",
+          "title": "1907_i_kaltsatisnoenas.txt"
+        },
+        {
+          "doc_id": "1909_i_pitropissa.txt",
+          "title": "1909_i_pitropissa.txt"
+        },
+        {
+          "doc_id": "1906_o_didaxos.txt",
+          "title": "1906_o_didaxos.txt"
+        }
+      ],
+      "task_id": "E4_0003"
+    },
+    {
+      "type": "cluster",
+      "clustering_id": "A",
+      "cluster_id": "5",
+      "items": [
+        {
+          "doc_id": "1912_megaleionpsonia.txt",
+          "title": "1912_megaleionpsonia.txt"
+        },
+        {
+          "doc_id": "1910_o_anakatos.txt",
+          "title": "1910_o_anakatos.txt"
+        },
+        {
+          "doc_id": "1906_i_graiakithiela.txt",
+          "title": "1906_i_graiakithiela.txt"
+        },
+        {
+          "doc_id": "1894_i_daskalomana.txt",
+          "title": "1894_i_daskalomana.txt"
+        }
+      ],
+      "task_id": "E4_0004"
+    },
+    {
+      "type": "cluster",
+      "clustering_id": "B",
+      "cluster_id": "4",
+      "items": [
+        {
+          "doc_id": "1893_navagion_navagia.txt",
+          "title": "1893_navagion_navagia.txt"
+        },
+        {
+          "doc_id": "1912_dimarxinanifi.txt",
+          "title": "1912_dimarxinanifi.txt"
+        },
+        {
+          "doc_id": "1897_eros_iros.txt",
+          "title": "1897_eros_iros.txt"
+        },
+        {
+          "doc_id": "1891_theoros_eros.txt",
+          "title": "1891_theoros_eros.txt"
+        }
+      ],
+      "task_id": "E4_0036"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "C",
+      "pair_id": "C_p30",
+      "doc1": {
+        "doc_id": "1925_tatelefteatougerou.txt",
+        "title": "1925_tatelefteatougerou.txt"
+      },
+      "doc2": {
+        "doc_id": "1896_o_erotasstaxionia.txt",
+        "title": "1896_o_erotasstaxionia.txt"
+      },
+      "same_cluster": false,
+      "task_id": "E4_0006"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "B",
+      "pair_id": "B_p31",
+      "doc1": {
+        "doc_id": "1914_tasymvantastomylo.txt",
+        "title": "1914_tasymvantastomylo.txt"
+      },
+      "doc2": {
+        "doc_id": "1899_giatinperifania.txt",
+        "title": "1899_giatinperifania.txt"
+      },
+      "same_cluster": true,
+      "task_id": "E4_0007"
+    },
+    {
+      "type": "cluster",
+      "clustering_id": "B",
+      "cluster_id": "2",
+      "items": [
+        {
+          "doc_id": "1906_i_episkepsistuagioudespoti.txt",
+          "title": "1906_i_episkepsistuagioudespoti.txt"
+        },
+        {
+          "doc_id": "1925_tokoukoyloma.txt",
+          "title": "1925_tokoukoyloma.txt"
+        },
+        {
+          "doc_id": "1900_oi_magisses.txt",
+          "title": "1900_oi_magisses.txt"
+        },
+        {
+          "doc_id": "1954_o_aftoktonos.txt",
+          "title": "1954_o_aftoktonos.txt"
+        }
+      ],
+      "task_id": "E4_0025"
+    },
+    {
+      "type": "cluster",
+      "clustering_id": "B",
+      "cluster_id": "0",
+      "items": [
+        {
+          "doc_id": "1901_tothavmatiskaisarianis.txt",
+          "title": "1901_tothavmatiskaisarianis.txt"
+        },
+        {
+          "doc_id": "1903_i_fonissa.txt",
+          "title": "1903_i_fonissa.txt"
+        },
+        {
+          "doc_id": "1908_tarodinakrogialia.txt",
+          "title": "1908_tarodinakrogialia.txt"
+        },
+        {
+          "doc_id": "1892_apokriatikinyxta.txt",
+          "title": "1892_apokriatikinyxta.txt"
+        }
+      ],
+      "task_id": "E4_0009"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "A",
+      "pair_id": "A_p30",
+      "doc1": {
+        "doc_id": "1912_dimarxinanifi.txt",
+        "title": "1912_dimarxinanifi.txt"
+      },
+      "doc2": {
+        "doc_id": "1925_taxelia.txt",
+        "title": "1925_taxelia.txt"
+      },
+      "same_cluster": false,
+      "task_id": "E4_0010"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "B",
+      "pair_id": "B_p32",
+      "doc1": {
+        "doc_id": "1896_spitakistolivadi.txt",
+        "title": "1896_spitakistolivadi.txt"
+      },
+      "doc2": {
+        "doc_id": "1934_stomegagialo.txt",
+        "title": "1934_stomegagialo.txt"
+      },
+      "same_cluster": false,
+      "task_id": "E4_0011"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "B",
+      "pair_id": "B_p27",
+      "doc1": {
+        "doc_id": "1901_trelivradia.txt",
+        "title": "1901_trelivradia.txt"
+      },
+      "doc2": {
+        "doc_id": "1910_nekrostaskidiotis.txt",
+        "title": "1910_nekrostaskidiotis.txt"
+      },
+      "same_cluster": false,
+      "task_id": "E4_0012"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "B",
+      "pair_id": "B_p25",
+      "doc1": {
+        "doc_id": "1925_i_kalikatzouna.txt",
+        "title": "1925_i_kalikatzouna.txt"
+      },
+      "doc2": {
+        "doc_id": "1905_togialoksylo.txt",
+        "title": "1905_togialoksylo.txt"
+      },
+      "same_cluster": true,
+      "task_id": "E4_0013"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "B",
+      "pair_id": "B_p26",
+      "doc1": {
+        "doc_id": "1891_o_pantarotas.txt",
+        "title": "1891_o_pantarotas.txt"
+      },
+      "doc2": {
+        "doc_id": "1901_oi_navagoswstai.txt",
+        "title": "1901_oi_navagoswstai.txt"
+      },
+      "same_cluster": false,
+      "task_id": "E4_0014"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "B",
+      "pair_id": "B_p29",
+      "doc1": {
+        "doc_id": "1906_topsofimi.txt",
+        "title": "1906_topsofimi.txt"
+      },
+      "doc2": {
+        "doc_id": "1906_i_theodikiatisdaskalas.txt",
+        "title": "1906_i_theodikiatisdaskalas.txt"
+      },
+      "same_cluster": false,
+      "task_id": "E4_0015"
+    },
+    {
+      "type": "cluster",
+      "clustering_id": "B",
+      "cluster_id": "3",
+      "items": [
+        {
+          "doc_id": "1896_o_erotasstaxionia.txt",
+          "title": "1896_o_erotasstaxionia.txt"
+        },
+        {
+          "doc_id": "1912_tavenetika.txt",
+          "title": "1912_tavenetika.txt"
+        },
+        {
+          "doc_id": "1925_epimithisistonvraxo.txt",
+          "title": "1925_epimithisistonvraxo.txt"
+        },
+        {
+          "doc_id": "1903_takroysmata.txt",
+          "title": "1903_takroysmata.txt"
+        }
+      ],
+      "task_id": "E4_0016"
+    },
+    {
+      "type": "cluster",
+      "clustering_id": "B",
+      "cluster_id": "11",
+      "items": [
+        {
+          "doc_id": "1906_koinonikiarmonia.txt",
+          "title": "1906_koinonikiarmonia.txt"
+        },
+        {
+          "doc_id": "1908_tasteraki.txt",
+          "title": "1908_tasteraki.txt"
+        },
+        {
+          "doc_id": "1906_tothalassoma.txt",
+          "title": "1906_tothalassoma.txt"
+        },
+        {
+          "doc_id": "1907_metonpezovolo.txt",
+          "title": "1907_metonpezovolo.txt"
+        }
+      ],
+      "task_id": "E4_0017"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "B",
+      "pair_id": "B_p30",
+      "doc1": {
+        "doc_id": "1910_nekrostaskidiotis.txt",
+        "title": "1910_nekrostaskidiotis.txt"
+      },
+      "doc2": {
+        "doc_id": "1900_topniskimotoupaidiou.txt",
+        "title": "1900_topniskimotoupaidiou.txt"
+      },
+      "same_cluster": true,
+      "task_id": "E4_0018"
+    },
+    {
+      "type": "cluster",
+      "clustering_id": "B",
+      "cluster_id": "9",
+      "items": [
+        {
+          "doc_id": "1925_i_psyxokori.txt",
+          "title": "1925_i_psyxokori.txt"
+        },
+        {
+          "doc_id": "1914_tasymvantastomylo.txt",
+          "title": "1914_tasymvantastomylo.txt"
+        },
+        {
+          "doc_id": "1901_i_xoleriasmeni.txt",
+          "title": "1901_i_xoleriasmeni.txt"
+        },
+        {
+          "doc_id": "1903_o_alivanistos.txt",
+          "title": "1903_o_alivanistos.txt"
+        }
+      ],
+      "task_id": "E4_0019"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "A",
+      "pair_id": "A_p28",
+      "doc1": {
+        "doc_id": "1900_oi_magisses.txt",
+        "title": "1900_oi_magisses.txt"
+      },
+      "doc2": {
+        "doc_id": "1907_taerikostodentro.txt",
+        "title": "1907_taerikostodentro.txt"
+      },
+      "same_cluster": false,
+      "task_id": "E4_0020"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "A",
+      "pair_id": "A_p26",
+      "doc1": {
+        "doc_id": "1900_oi_magisses.txt",
+        "title": "1900_oi_magisses.txt"
+      },
+      "doc2": {
+        "doc_id": "1892_oi_xalasoxorides.txt",
+        "title": "1892_oi_xalasoxorides.txt"
+      },
+      "same_cluster": false,
+      "task_id": "E4_0021"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "A",
+      "pair_id": "A_p27",
+      "doc1": {
+        "doc_id": "1906_apsaltos.txt",
+        "title": "1906_apsaltos.txt"
+      },
+      "doc2": {
+        "doc_id": "1900_kokkonathalassa.txt",
+        "title": "1900_kokkonathalassa.txt"
+      },
+      "same_cluster": true,
+      "task_id": "E4_0022"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "A",
+      "pair_id": "A_p31",
+      "doc1": {
+        "doc_id": "1906_tothalassoma.txt",
+        "title": "1906_tothalassoma.txt"
+      },
+      "doc2": {
+        "doc_id": "1891_paidikipasxalia.txt",
+        "title": "1891_paidikipasxalia.txt"
+      },
+      "same_cluster": false,
+      "task_id": "E4_0023"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "C",
+      "pair_id": "C_p26",
+      "doc1": {
+        "doc_id": "1912_toxatzopoulo.txt",
+        "title": "1912_toxatzopoulo.txt"
+      },
+      "doc2": {
+        "doc_id": "1887_toxristopsomo.txt",
+        "title": "1887_toxristopsomo.txt"
+      },
+      "same_cluster": true,
+      "task_id": "E4_0024"
+    },
+    {
+      "type": "cluster",
+      "clustering_id": "B",
+      "cluster_id": "2",
+      "items": [
+        {
+          "doc_id": "1906_i_episkepsistuagioudespoti.txt",
+          "title": "1906_i_episkepsistuagioudespoti.txt"
+        },
+        {
+          "doc_id": "1925_tokoukoyloma.txt",
+          "title": "1925_tokoukoyloma.txt"
+        },
+        {
+          "doc_id": "1900_oi_magisses.txt",
+          "title": "1900_oi_magisses.txt"
+        },
+        {
+          "doc_id": "1954_o_aftoktonos.txt",
+          "title": "1954_o_aftoktonos.txt"
+        }
+      ],
+      "task_id": "E4_0025"
+    },
+    {
+      "type": "cluster",
+      "clustering_id": "B",
+      "cluster_id": "13",
+      "items": [
+        {
+          "doc_id": "1900_tadaimoniastorema.txt",
+          "title": "1900_tadaimoniastorema.txt"
+        },
+        {
+          "doc_id": "1896_taxristougennatoutempeli.txt",
+          "title": "1896_taxristougennatoutempeli.txt"
+        },
+        {
+          "doc_id": "1900_i_farmakolytria.txt",
+          "title": "1900_i_farmakolytria.txt"
+        },
+        {
+          "doc_id": "1899_tagnantema.txt",
+          "title": "1899_tagnantema.txt"
+        }
+      ],
+      "task_id": "E4_0026"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "C",
+      "pair_id": "C_p27",
+      "doc1": {
+        "doc_id": "1925_totheoponti.txt",
+        "title": "1925_totheoponti.txt"
+      },
+      "doc2": {
+        "doc_id": "1925_epimithisistonvraxo.txt",
+        "title": "1925_epimithisistonvraxo.txt"
+      },
+      "same_cluster": true,
+      "task_id": "E4_0027"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "B",
+      "pair_id": "B_p28",
+      "doc1": {
+        "doc_id": "1896_xorisstefani.txt",
+        "title": "1896_xorisstefani.txt"
+      },
+      "doc2": {
+        "doc_id": "1906_i_theodikiatisdaskalas.txt",
+        "title": "1906_i_theodikiatisdaskalas.txt"
+      },
+      "same_cluster": true,
+      "task_id": "E4_0028"
+    },
+    {
+      "type": "cluster",
+      "clustering_id": "C",
+      "cluster_id": "0",
+      "items": [
+        {
+          "doc_id": "1907_fortomenakokkala.txt",
+          "title": "1907_fortomenakokkala.txt"
+        },
+        {
+          "doc_id": "1903_o_alivanistos.txt",
+          "title": "1903_o_alivanistos.txt"
+        },
+        {
+          "doc_id": "1903_alostypos.txt",
+          "title": "1903_alostypos.txt"
+        },
+        {
+          "doc_id": "1914_o_gamostoukaraxmeti.txt",
+          "title": "1914_o_gamostoukaraxmeti.txt"
+        }
+      ],
+      "task_id": "E4_0029"
+    },
+    {
+      "type": "cluster",
+      "clustering_id": "B",
+      "cluster_id": "1",
+      "items": [
+        {
+          "doc_id": "1908_tomyrologitisfokias.txt",
+          "title": "1908_tomyrologitisfokias.txt"
+        },
+        {
+          "doc_id": "1904_mpuftpli.txt",
+          "title": "1904_mpuftpli.txt"
+        },
+        {
+          "doc_id": "1894_fotaolofota.txt",
+          "title": "1894_fotaolofota.txt"
+        },
+        {
+          "doc_id": "1888_i_xirapapadia.txt",
+          "title": "1888_i_xirapapadia.txt"
+        }
+      ],
+      "task_id": "E4_0030"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "A",
+      "pair_id": "A_p29",
+      "doc1": {
+        "doc_id": "1925_tatelefteatougerou.txt",
+        "title": "1925_tatelefteatougerou.txt"
+      },
+      "doc2": {
+        "doc_id": "1912_toxatzopoulo.txt",
+        "title": "1912_toxatzopoulo.txt"
+      },
+      "same_cluster": true,
+      "task_id": "E4_0031"
+    },
+    {
+      "type": "cluster",
+      "clustering_id": "B",
+      "cluster_id": "5",
+      "items": [
+        {
+          "doc_id": "1905_i_aposostra.txt",
+          "title": "1905_i_aposostra.txt"
+        },
+        {
+          "doc_id": "1902_i_thititispentheras.txt",
+          "title": "1902_i_thititispentheras.txt"
+        },
+        {
+          "doc_id": "1907_fortomenakokkala.txt",
+          "title": "1907_fortomenakokkala.txt"
+        },
+        {
+          "doc_id": "1925_toidioktito.txt",
+          "title": "1925_toidioktito.txt"
+        }
+      ],
+      "task_id": "E4_0032"
+    },
+    {
+      "type": "cluster",
+      "clustering_id": "C",
+      "cluster_id": "5",
+      "items": [
+        {
+          "doc_id": "1900_o_geitonasmetolagouto.txt",
+          "title": "1900_o_geitonasmetolagouto.txt"
+        },
+        {
+          "doc_id": "1901_tothavmatiskaisarianis.txt",
+          "title": "1901_tothavmatiskaisarianis.txt"
+        },
+        {
+          "doc_id": "1899_oi_paraponemenes.txt",
+          "title": "1899_oi_paraponemenes.txt"
+        },
+        {
+          "doc_id": "1906_i_graiakithiela.txt",
+          "title": "1906_i_graiakithiela.txt"
+        }
+      ],
+      "task_id": "E4_0033"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "C",
+      "pair_id": "C_p25",
+      "doc1": {
+        "doc_id": "1906_totyflosokaki.txt",
+        "title": "1906_totyflosokaki.txt"
+      },
+      "doc2": {
+        "doc_id": "1908_oi_lirestouzaxou.txt",
+        "title": "1908_oi_lirestouzaxou.txt"
+      },
+      "same_cluster": false,
+      "task_id": "E4_0034"
+    },
+    {
+      "type": "cluster",
+      "clustering_id": "A",
+      "cluster_id": "1",
+      "items": [
+        {
+          "doc_id": "1900_topniskimotoupaidiou.txt",
+          "title": "1900_topniskimotoupaidiou.txt"
+        },
+        {
+          "doc_id": "1900_o_gagatoskaitoalogo.txt",
+          "title": "1900_o_gagatoskaitoalogo.txt"
+        },
+        {
+          "doc_id": "1894_wxvasanakia.txt",
+          "title": "1894_wxvasanakia.txt"
+        },
+        {
+          "doc_id": "1909_tisdaskalastamagia.txt",
+          "title": "1909_tisdaskalastamagia.txt"
+        }
+      ],
+      "task_id": "E4_0035"
+    },
+    {
+      "type": "cluster",
+      "clustering_id": "B",
+      "cluster_id": "4",
+      "items": [
+        {
+          "doc_id": "1893_navagion_navagia.txt",
+          "title": "1893_navagion_navagia.txt"
+        },
+        {
+          "doc_id": "1912_dimarxinanifi.txt",
+          "title": "1912_dimarxinanifi.txt"
+        },
+        {
+          "doc_id": "1897_eros_iros.txt",
+          "title": "1897_eros_iros.txt"
+        },
+        {
+          "doc_id": "1891_theoros_eros.txt",
+          "title": "1891_theoros_eros.txt"
+        }
+      ],
+      "task_id": "E4_0036"
+    },
+    {
+      "type": "cluster",
+      "clustering_id": "C",
+      "cluster_id": "3",
+      "items": [
+        {
+          "doc_id": "1906_i_ksompliastira.txt",
+          "title": "1906_i_ksompliastira.txt"
+        },
+        {
+          "doc_id": "1896_xorisstefani.txt",
+          "title": "1896_xorisstefani.txt"
+        },
+        {
+          "doc_id": "1887_toxristopsomo.txt",
+          "title": "1887_toxristopsomo.txt"
+        },
+        {
+          "doc_id": "1909_tisdaskalastamagia.txt",
+          "title": "1909_tisdaskalastamagia.txt"
+        }
+      ],
+      "task_id": "E4_0037"
+    },
+    {
+      "type": "cluster",
+      "clustering_id": "C",
+      "cluster_id": "6",
+      "items": [
+        {
+          "doc_id": "1925_i_kalikatzouna.txt",
+          "title": "1925_i_kalikatzouna.txt"
+        },
+        {
+          "doc_id": "1925_totheoponti.txt",
+          "title": "1925_totheoponti.txt"
+        },
+        {
+          "doc_id": "1947_o_prostatistonxiron.txt",
+          "title": "1947_o_prostatistonxiron.txt"
+        },
+        {
+          "doc_id": "1900_kokkonathalassa.txt",
+          "title": "1900_kokkonathalassa.txt"
+        }
+      ],
+      "task_id": "E4_0038"
+    },
+    {
+      "type": "cluster",
+      "clustering_id": "B",
+      "cluster_id": "6",
+      "items": [
+        {
+          "doc_id": "1906_stagonanerou.txt",
+          "title": "1906_stagonanerou.txt"
+        },
+        {
+          "doc_id": "1900_amartiasfadasma.txt",
+          "title": "1900_amartiasfadasma.txt"
+        },
+        {
+          "doc_id": "1910_nekrostaskidiotis.txt",
+          "title": "1910_nekrostaskidiotis.txt"
+        },
+        {
+          "doc_id": "1901_ypotinvasilikidryn.txt",
+          "title": "1901_ypotinvasilikidryn.txt"
+        }
+      ],
+      "task_id": "E4_0039"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "C",
+      "pair_id": "C_p32",
+      "doc1": {
+        "doc_id": "1912_tavenetika.txt",
+        "title": "1912_tavenetika.txt"
+      },
+      "doc2": {
+        "doc_id": "1914_manakaikori.txt",
+        "title": "1914_manakaikori.txt"
+      },
+      "same_cluster": false,
+      "task_id": "E4_0040"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "C",
+      "pair_id": "C_p29",
+      "doc1": {
+        "doc_id": "1909_i_pepikilmeni.txt",
+        "title": "1909_i_pepikilmeni.txt"
+      },
+      "doc2": {
+        "doc_id": "1925_totheoponti.txt",
+        "title": "1925_totheoponti.txt"
+      },
+      "same_cluster": true,
+      "task_id": "E4_0041"
+    },
+    {
+      "type": "cluster",
+      "clustering_id": "B",
+      "cluster_id": "10",
+      "items": [
+        {
+          "doc_id": "1903_i_sinteknissa.txt",
+          "title": "1903_i_sinteknissa.txt"
+        },
+        {
+          "doc_id": "1903_alostypos.txt",
+          "title": "1903_alostypos.txt"
+        },
+        {
+          "doc_id": "1903_o_aeiplanitos.txt",
+          "title": "1903_o_aeiplanitos.txt"
+        },
+        {
+          "doc_id": "1896_xorisstefani.txt",
+          "title": "1896_xorisstefani.txt"
+        }
+      ],
+      "task_id": "E4_0042"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "A",
+      "pair_id": "A_p32",
+      "doc1": {
+        "doc_id": "1904_o_xaramados.txt",
+        "title": "1904_o_xaramados.txt"
+      },
+      "doc2": {
+        "doc_id": "1925_i_kalikatzouna.txt",
+        "title": "1925_i_kalikatzouna.txt"
+      },
+      "same_cluster": true,
+      "task_id": "E4_0043"
+    },
+    {
+      "type": "cluster",
+      "clustering_id": "B",
+      "cluster_id": "7",
+      "items": [
+        {
+          "doc_id": "1890_i_xtypimeni.txt",
+          "title": "1890_i_xtypimeni.txt"
+        },
+        {
+          "doc_id": "1912_megaleionpsonia.txt",
+          "title": "1912_megaleionpsonia.txt"
+        },
+        {
+          "doc_id": "1889_i_staxomazostra.txt",
+          "title": "1889_i_staxomazostra.txt"
+        },
+        {
+          "doc_id": "1891_miapsixi.txt",
+          "title": "1891_miapsixi.txt"
+        }
+      ],
+      "task_id": "E4_0044"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "C",
+      "pair_id": "C_p31",
+      "doc1": {
+        "doc_id": "1903_i_fonissa.txt",
+        "title": "1903_i_fonissa.txt"
+      },
+      "doc2": {
+        "doc_id": "1904_i_fonitudrakou.txt",
+        "title": "1904_i_fonitudrakou.txt"
+      },
+      "same_cluster": true,
+      "task_id": "E4_0045"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "A",
+      "pair_id": "A_p25",
+      "doc1": {
+        "doc_id": "1914_o_gamostoukaraxmeti.txt",
+        "title": "1914_o_gamostoukaraxmeti.txt"
+      },
+      "doc2": {
+        "doc_id": "1893_lampriatikospsaltis.txt",
+        "title": "1893_lampriatikospsaltis.txt"
+      },
+      "same_cluster": true,
+      "task_id": "E4_0046"
+    },
+    {
+      "type": "pair",
+      "clustering_id": "C",
+      "pair_id": "C_p28",
+      "doc1": {
+        "doc_id": "1903_alostypos.txt",
+        "title": "1903_alostypos.txt"
+      },
+      "doc2": {
+        "doc_id": "1890_eksoxikilabri.txt",
+        "title": "1890_eksoxikilabri.txt"
+      },
+      "same_cluster": true,
+      "task_id": "E4_0047"
+    },
+    {
+      "type": "cluster",
+      "clustering_id": "A",
+      "cluster_id": "2",
+      "items": [
+        {
+          "doc_id": "1900_apolafsisstigitonia.txt",
+          "title": "1900_apolafsisstigitonia.txt"
+        },
+        {
+          "doc_id": "1899_oi_paraponemenes.txt",
+          "title": "1899_oi_paraponemenes.txt"
+        },
+        {
+          "doc_id": "1906_oi_dyodrakoi.txt",
+          "title": "1906_oi_dyodrakoi.txt"
+        },
+        {
+          "doc_id": "1895_filostorgoi.txt",
+          "title": "1895_filostorgoi.txt"
+        }
+      ],
+      "task_id": "E4_0048"
+    }
+  ]
+}

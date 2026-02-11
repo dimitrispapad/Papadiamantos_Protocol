@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="el">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Αξιολόγηση Κατηγοριοποίησης Παπαδιαμάντη</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-title">Αξιολόγηση Κατηγοριοποίησης Παπαδιαμάντη</div>
+      <div class="brand-sub">Expert evaluation (A/B/C) — clusters & pairs</div>
+    </div>
+    <div class="meta">
+      <div id="expertBadge" class="badge">Expert: —</div>
+      <div id="progressBadge" class="badge">0%</div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="screenWelcome" class="card">
+      <h1>Καλώς ήρθατε</h1>
+      <p>
+        Στόχος είναι να αξιολογήσετε τρεις εναλλακτικές κατηγοριοποιήσεις έργων του Αλέξανδρου Παπαδιαμάντη ως προς
+        τη θεματική συνοχή και τη χρησιμότητά τους για φιλολογική ανάλυση.
+      </p>
+
+      <h2>Τι θα κάνετε</h2>
+      <ul>
+        <li>Αξιολόγηση έργων μέσα σε ομάδες (clusters): συνάφεια 1–5 + «εκτός ομάδας».</li>
+        <li>Αξιολόγηση ζευγών έργων: θεματική συγγένεια 1–5. Αν η συγγένεια είναι ≥4, γράφετε το κοινό θεματικό στοιχείο.</li>
+      </ul>
+
+      <h2>Ανώνυμα δεδομένα & εθελοντική συμμετοχή</h2>
+      <p>
+        Καταγράφονται μόνο οι απαντήσεις αξιολόγησης και ένας ανώνυμος κωδικός συμμετοχής (π.χ. E1).
+        Η συμμετοχή είναι εθελοντική και μπορείτε να διακόψετε οποιαδήποτε στιγμή.
+      </p>
+
+      <div class="consent">
+        <label class="checkbox">
+          <input type="checkbox" id="consentCheck" />
+          <span>Συμφωνώ να συμμετέχω και να χρησιμοποιηθούν οι απαντήσεις μου για ερευνητικούς σκοπούς.</span>
+        </label>
+      </div>
+
+      <div class="actions">
+        <button id="btnStart" class="btn primary" disabled>Έναρξη</button>
+      </div>
+
+      <p class="hint">
+        Tip: ανοίξτε το link ως <code>?expert=E1</code>. Η πρόοδός σας αποθηκεύεται αυτόματα στον browser.
+      </p>
+    </section>
+
+    <section id="screenTask" class="card hidden">
+      <div class="task-header">
+        <div>
+          <div id="taskType" class="kicker">TASK</div>
+          <h1 id="taskTitle">—</h1>
+          <div id="taskSubtitle" class="muted">—</div>
+        </div>
+        <div class="task-nav">
+          <button id="btnBack" class="btn">Πίσω</button>
+          <button id="btnNext" class="btn primary">Επόμενο</button>
+        </div>
+      </div>
+      <div id="taskBody"></div>
+    </section>
+
+    <section id="screenSubmit" class="card hidden">
+      <h1>Υποβολή</h1>
+      <p>Πατήστε «Υποβολή» για να σταλούν οι απαντήσεις.</p>
+      <div class="actions">
+        <button id="btnReview" class="btn">Επιστροφή</button>
+        <button id="btnSubmit" class="btn primary">Υποβολή</button>
+      </div>
+      <div id="submitStatus" class="muted" style="margin-top:10px;"></div>
+    </section>
+
+    <section id="screenThanks" class="card hidden">
+      <h1>Ευχαριστούμε!</h1>
+      <p>Η υποβολή ολοκληρώθηκε. Μπορείτε να κλείσετε αυτό το παράθυρο.</p>
+    </section>
+
+    <!-- Netlify form: must exist in HTML at build time -->
+    <form name="papadiamantis-eval" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="hidden">
+      <input type="hidden" name="form-name" value="papadiamantis-eval" />
+      <p class="hidden"><label>Don’t fill this out: <input name="bot-field" /></label></p>
+      <input type="text" name="expert_id" />
+      <input type="text" name="assignment_id" />
+      <input type="text" name="app_version" />
+      <textarea name="payload"></textarea>
+    </form>
+  </main>
+
+  <footer class="footer">
+    <div>© SimasiaAI / Research prototype — Netlify Forms</div>
+    <div class="muted">A/B/C are blinded clusterings.</div>
+  </footer>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>
