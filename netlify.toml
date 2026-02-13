@@ -1,2 +1,18 @@
 [build]
   publish = "papadiamantis-eval-netlify"
+  command = ""
+
+# Avoid stale assignments/clusterings due to caching
+[[headers]]
+  for = "/data/*"
+  [headers.values]
+    Cache-Control = "no-store"
+
+# Basic hardening + good defaults for a static form app
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
