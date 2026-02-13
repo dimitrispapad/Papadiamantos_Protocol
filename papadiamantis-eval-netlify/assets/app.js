@@ -547,10 +547,11 @@ async function submit(){
     });
 
     if(!r.ok){
-      $("submitStatus").textContent = "Σφάλμα υποβολής. Δοκιμάστε ξανά.";
-      $("btnSubmit").disabled = false;
-      return;
-    }
+  const txt = await r.text().catch(()=> "");
+  $("submitStatus").textContent = `Σφάλμα υποβολής (${r.status}). ${txt ? txt.slice(0,120) : ""}`;
+  return;
+}
+
 
     state.submitted = true;
     persist();
