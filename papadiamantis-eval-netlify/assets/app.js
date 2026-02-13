@@ -1,5 +1,5 @@
-const APP_VERSION = "0.1.0";
-const STORAGE_PREFIX = "pap_eval_v1";
+const APP_VERSION = "0.2.0";
+const STORAGE_PREFIX = "pap_eval_v2";
 
 function qs(name){ return new URL(window.location.href).searchParams.get(name); }
 function $(id){ return document.getElementById(id); }
@@ -29,7 +29,23 @@ function storageKey(expertId, assignmentId){
 }
 
 function defaultState(){
-  return { started:false, taskIndex:0, answers:{}, startedAt:null, finishedAt:null };
+  return {
+    started:false,
+    taskIndex:0,
+    answers:{},
+    startedAt:null,
+    finishedAt:null,
+
+    // anti-duplicate / idempotency
+    clientSessionId:null,
+    submitted:false,
+    lastSubmissionUuid:null,
+
+    // lightweight timing (optional but useful)
+    taskTimeMs:{},
+    _lastTaskKey:null,
+    _lastTaskEnterAt:null
+  };
 }
 
 function saveState(key, state){ localStorage.setItem(key, JSON.stringify(state)); }
@@ -37,6 +53,29 @@ function loadState(key){
   const raw = localStorage.getItem(key);
   if(!raw) return null;
   try { return JSON.parse(raw); } catch { return null; }
+}
+
+function randomId(prefix=""){
+  // crypto-safe UUID-ish, short
+  const buf = new Uint8Array(12);
+  crypto.getRandomValues(buf);
+  const s = Array.from(buf).map(b => b.toString(16).padStart(2,"0")).join("");
+  return prefix ? `${prefix}_${s}` : s;
+}
+
+function getAnswerKey(task){
+  // task_uid is stable across reordering; fallback to task_id for backward compatibility
+  return task.task_uid || task.task_id;
+}
+
+function ensureClientSessionId(){
+  const k = `${STORAGE_PREFIX}::client_session_id::${expertId || "unknown"}`;
+  let v = localStorage.getItem(k);
+  if(!v){
+    v = randomId("sess");
+    localStorage.setItem(k, v);
+  }
+  return v;
 }
 
 function renderScale(name, currentValue, onChange){
@@ -72,6 +111,8 @@ function renderClusterTask(task, answer, onUpdate){
   const itemsWrap = document.createElement("div");
   itemsWrap.className = "grid";
 
+  const taskKey = getAnswerKey(task);
+
   task.items.forEach((it) => {
     const itemKey = it.doc_id;
     const itemAns = a.items[itemKey] || {coherence:null, misplaced:false, note:""};
@@ -96,7 +137,8 @@ function renderClusterTask(task, answer, onUpdate){
       card.appendChild(ex);
     }
 
-    card.appendChild(renderScale(`coh_${task.task_id}_${itemKey}`, itemAns.coherence, (val)=>{
+    // Use stable task key to avoid collisions across regenerated assignments
+    card.appendChild(renderScale(`coh_${taskKey}_${itemKey}`, itemAns.coherence, (val)=>{
       itemAns.coherence = val;
       a.items[itemKey] = itemAns;
       onUpdate(a);
@@ -188,10 +230,12 @@ function renderPairTask(task, answer, onUpdate){
   p2.innerHTML = `<span class="pill">B</span> <strong>${task.doc2.title || task.doc2.doc_id}</strong> <span class="muted">(${task.doc2.doc_id})</span>`;
   card.appendChild(p1); card.appendChild(p2);
 
-  card.appendChild(renderScale(`rel_${task.task_id}`, a.relatedness, (val)=>{
+  const taskKey = getAnswerKey(task);
+
+  card.appendChild(renderScale(`rel_${taskKey}`, a.relatedness, (val)=>{
     a.relatedness = val;
     onUpdate(a);
-    render(); // refresh to show/hide common theme
+    // caller will rerender
   }));
 
   const note = document.createElement("input");
@@ -222,8 +266,6 @@ function renderPairTask(task, answer, onUpdate){
   }
 
   body.appendChild(card);
-
-  function render(){ /* placeholder; caller rerenders */ }
   return body;
 }
 
@@ -248,6 +290,43 @@ function validateTask(task, answer){
 
 let assignment=null, expertId=null, stateKey=null, state=null;
 
+function showScreen(name){
+  // name: welcome | task | submit | thanks
+  $("screenWelcome").classList.toggle("hidden", name !== "welcome");
+  $("screenTask").classList.toggle("hidden", name !== "task");
+  $("screenSubmit").classList.toggle("hidden", name !== "submit");
+  $("screenThanks").classList.toggle("hidden", name !== "thanks");
+}
+
+function persist(){ if(stateKey) saveState(stateKey, state); }
+
+function updateTimingOnTaskSwitch(nextTaskKey){
+  const now = Date.now();
+  const prevKey = state._lastTaskKey;
+  const prevEnter = state._lastTaskEnterAt;
+
+  if(prevKey && prevEnter){
+    const delta = Math.max(0, now - prevEnter);
+    state.taskTimeMs[prevKey] = (state.taskTimeMs[prevKey] || 0) + delta;
+  }
+  state._lastTaskKey = nextTaskKey;
+  state._lastTaskEnterAt = now;
+}
+
+function computeClusterBatchInfo(task){
+  if(task.type !== "cluster") return null;
+  const same = assignment.tasks.filter(t =>
+    t.type === "cluster" &&
+    t.clustering_id === task.clustering_id &&
+    t.cluster_id === task.cluster_id
+  );
+  if(same.length <= 1) return null;
+  // Sort by batch_index if present
+  const sorted = same.slice().sort((a,b)=>(a.batch_index ?? 0) - (b.batch_index ?? 0));
+  const idx = sorted.findIndex(t => getAnswerKey(t) === getAnswerKey(task));
+  return { k: idx >= 0 ? (idx+1) : null, K: sorted.length };
+}
+
 async function init(){
   expertId = qs("expert") || "E1";
   $("expertBadge").textContent = `Expert: ${expertId}`;
@@ -267,7 +346,8 @@ async function init(){
 
   $("btnNext").addEventListener("click", ()=>{
     const task = assignment.tasks[state.taskIndex];
-    const ans = state.answers[task.task_id];
+    const key = getAnswerKey(task);
+    const ans = state.answers[key];
     const v = validateTask(task, ans);
     if(!v.ok){ alert(v.msg); return; }
     state.taskIndex = clamp(state.taskIndex + 1, 0, assignment.tasks.length);
@@ -285,7 +365,30 @@ async function init(){
     assignment = await loadJSON(`data/assignments/${expertId}.json`);
     stateKey = storageKey(expertId, assignment.assignment_id);
     state = loadState(stateKey) || defaultState();
+
+    // ensure stable client session id
+    if(!state.clientSessionId){
+      state.clientSessionId = ensureClientSessionId();
+    }
+
+    // Resume logic
     updateBadges(expertId, state.taskIndex, assignment.tasks.length);
+
+    if(state.submitted){
+      showScreen("thanks");
+    }else if(state.started){
+      // if user already finished tasks, go to submit
+      if(state.taskIndex >= assignment.tasks.length){
+        showScreen("submit");
+      }else{
+        showScreen("task");
+      }
+      render();
+    }else{
+      showScreen("welcome");
+    }
+
+    persist();
   }catch(e){
     alert("Δεν βρέθηκε ανάθεση για αυτόν τον expert (λείπει data/assignments/" + expertId + ".json).");
     console.error(e);
@@ -297,39 +400,44 @@ async function startApp(){
   state.started = true;
   if(!state.startedAt) state.startedAt = nowISO();
   persist();
-  $("screenWelcome").classList.add("hidden");
-  $("screenTask").classList.remove("hidden");
+  showScreen("task");
   render();
 }
 
-function persist(){ if(stateKey) saveState(stateKey, state); }
-
 function render(){
   if(!assignment || !state) return;
+
   updateBadges(expertId, state.taskIndex, assignment.tasks.length);
 
   if(state.taskIndex >= assignment.tasks.length){
-    $("screenTask").classList.add("hidden");
-    $("screenSubmit").classList.remove("hidden");
-    $("screenThanks").classList.add("hidden");
+    // finalize timing for last task view
+    updateTimingOnTaskSwitch(null);
+    showScreen("submit");
     return;
-  }else{
-    $("screenSubmit").classList.add("hidden");
-    $("screenThanks").classList.add("hidden");
   }
 
   const task = assignment.tasks[state.taskIndex];
+  const taskKey = getAnswerKey(task);
+
+  updateTimingOnTaskSwitch(taskKey);
+
   $("taskType").textContent = (task.type === "cluster") ? "CLUSTER TASK" : "PAIR TASK";
-  $("taskTitle").textContent = (task.type === "cluster")
-    ? `Κατηγοριοποίηση ${task.clustering_id} — Cluster ${task.cluster_id}`
-    : `Κατηγοριοποίηση ${task.clustering_id} — Ζεύγος έργων`;
+
+  if(task.type === "cluster"){
+    const bi = computeClusterBatchInfo(task);
+    const extra = bi ? ` — Μέρος ${bi.k}/${bi.K}` : "";
+    $("taskTitle").textContent = `Κατηγοριοποίηση ${task.clustering_id} — Cluster ${task.cluster_id}${extra}`;
+  }else{
+    $("taskTitle").textContent = `Κατηγοριοποίηση ${task.clustering_id} — Ζεύγος έργων`;
+  }
+
   $("taskSubtitle").textContent = `Task ${state.taskIndex+1}/${assignment.tasks.length}`;
 
   const body = $("taskBody");
   body.innerHTML = "";
 
-  const ans = state.answers[task.task_id];
-  const onUpdate = (newAns)=>{ state.answers[task.task_id] = newAns; persist(); };
+  const ans = state.answers[taskKey];
+  const onUpdate = (newAns)=>{ state.answers[taskKey] = newAns; persist(); };
 
   let node=null;
   if(task.type === "cluster"){
@@ -344,10 +452,20 @@ function render(){
 }
 
 async function submit(){
+  if(state.submitted){
+    showScreen("thanks");
+    return;
+  }
+
+  // prevent double click while in-flight
+  $("btnSubmit").disabled = true;
+
   for(const t of assignment.tasks){
-    const v = validateTask(t, state.answers[t.task_id]);
+    const key = getAnswerKey(t);
+    const v = validateTask(t, state.answers[key]);
     if(!v.ok){
       $("submitStatus").textContent = "Υπάρχουν ελλιπείς απαντήσεις. Επιστρέψτε για έλεγχο.";
+      $("btnSubmit").disabled = false;
       return;
     }
   }
@@ -355,15 +473,58 @@ async function submit(){
   state.finishedAt = nowISO();
   persist();
 
+  const submissionUuid = randomId("sub");
+  state.lastSubmissionUuid = submissionUuid;
+
+  // Send a compact task digest (enough for analysis, avoids huge payload)
+  const taskDigest = assignment.tasks.map(t => {
+    const base = {
+      task_uid: t.task_uid || null,
+      task_id: t.task_id || null,
+      type: t.type,
+      clustering_id: t.clustering_id
+    };
+    if(t.type === "cluster"){
+      return {
+        ...base,
+        cluster_id: t.cluster_id,
+        batch_index: t.batch_index ?? null,
+        items: (t.items || []).map(it => ({ doc_id: it.doc_id, title: it.title || it.doc_id }))
+      };
+    }
+    if(t.type === "pair"){
+      return {
+        ...base,
+        pair_id: t.pair_id || null,
+        doc1: { doc_id: t.doc1?.doc_id, title: t.doc1?.title || t.doc1?.doc_id },
+        doc2: { doc_id: t.doc2?.doc_id, title: t.doc2?.title || t.doc2?.doc_id },
+        same_cluster: !!t.same_cluster
+      };
+    }
+    return base;
+  });
+
   const payload = {
     expert_id: expertId,
     assignment_id: assignment.assignment_id,
+    primary_clustering_id: assignment.primary_clustering_id || null,
+
     app_version: APP_VERSION,
+    submission_uuid: submissionUuid,
+    client_session_id: state.clientSessionId,
+
     submitted_at: nowISO(),
     started_at: state.startedAt,
     finished_at: state.finishedAt,
-    meta: { user_agent: navigator.userAgent, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone },
-    tasks: assignment.tasks,
+
+    meta: {
+      user_agent: navigator.userAgent,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+    },
+
+    task_time_ms: state.taskTimeMs || {},
+
+    tasks: taskDigest,
     answers: state.answers
   };
 
@@ -372,6 +533,8 @@ async function submit(){
     "expert_id": expertId,
     "assignment_id": assignment.assignment_id,
     "app_version": APP_VERSION,
+    "submission_uuid": submissionUuid,
+    "client_session_id": state.clientSessionId,
     "payload": JSON.stringify(payload)
   };
 
@@ -382,16 +545,22 @@ async function submit(){
       headers: {"Content-Type":"application/x-www-form-urlencoded"},
       body: encodeForm(data)
     });
+
     if(!r.ok){
       $("submitStatus").textContent = "Σφάλμα υποβολής. Δοκιμάστε ξανά.";
+      $("btnSubmit").disabled = false;
       return;
     }
-    $("screenSubmit").classList.add("hidden");
-    $("screenThanks").classList.remove("hidden");
+
+    state.submitted = true;
+    persist();
+
+    showScreen("thanks");
     $("submitStatus").textContent = "";
   }catch(e){
     console.error(e);
     $("submitStatus").textContent = "Σφάλμα δικτύου. Δοκιμάστε ξανά.";
+    $("btnSubmit").disabled = false;
   }
 }
 
