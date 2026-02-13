@@ -1,59 +1,76 @@
 # Papadiamantis Clustering Expert Evaluation (Netlify-ready)
 
-Static web app (HTML/CSS/JS) for expert evaluation of **three** alternative clusterings (A/B/C).
+Static web app (HTML/CSS/JS) for blinded expert evaluation of **three** alternative clusterings of Papadiamantis short stories (A/B/C).
 
-**Task types**
-- **Cluster task:** coherence (1–5) per item + misplaced flag + cluster label/notes.
-- **Pair task:** relatedness (1–5) for pairs. If **>= 4**, the UI asks for the **common thematic element**.
+The interface presents **two task types** (cluster screens + pair screens), saves progress locally in the browser, and submits a single structured JSON payload to **Netlify Forms**.
 
-**Data collection**
-- Uses **Netlify Forms** (no external DB required).
-- Submits one JSON payload per expert session.
+---
+
+## What experts do (2 task types)
+
+### T1 — Cluster task (item-level)
+Experts see a small set of works sampled from one cluster and provide:
+- **Coherence rating (1–5)** for each work (how well it fits the group)
+- **Misplaced flag** (binary outlier marker)
+- Optional: **cluster label** (1–5 words) and short notes
+
+### T2 — Pair task (pairwise relatedness)
+Experts rate a pair of works on:
+- **Relatedness (1–5)**
+- If **≥ 4**, the UI prompts for a short **common thematic element** (1–2 sentences)
+
+---
+
+## How experts access the study
+
+Each expert receives a personalized link:
+
+- `https://<YOUR_DOMAIN>/?expert=E1`
+- `https://<YOUR_DOMAIN>/?expert=E2`
+- …
+- `https://<YOUR_DOMAIN>/?expert=E9`
+
+Experts are **blinded**: clusterings are shown only as **A/B/C** (mapping to TF–IDF, semantic, hybrid is hidden during rating).
+
+Progress is saved in the expert’s browser (localStorage), so they can refresh and continue.
+
+---
+
+## Data collection and integrity
+
+- Submissions are stored via **Netlify Forms** under the form name: `papadiamantis-eval`
+- Each submission includes:
+  - `expert_id`, `assignment_id`, `app_version`
+  - timestamps (`started_at`, `submitted_at`, `finished_at`)
+  - stable per-task identifiers (**`task_uid`**) and all answers
+  - idempotency fields: **`client_session_id`** + **`submission_uuid`**  
+    (used to deduplicate accidental re-submissions during preprocessing)
+
+**Important:** tasks are keyed by `task_uid` (stable across reordering/regeneration), avoiding collisions that can occur with sequential task IDs.
+
+---
+
+## Repository structure (publish directory)
+
+Netlify publishes the folder:
+
+- `papadiamantis-eval-netlify/`
+
+Key paths:
+- `papadiamantis-eval-netlify/index.html`
+- `papadiamantis-eval-netlify/assets/` (UI logic + CSS)
+- `papadiamantis-eval-netlify/data/clusterings_raw/` (input inventories)
+- `papadiamantis-eval-netlify/data/clusterings/` (A/B/C JSON used by the app)
+- `papadiamantis-eval-netlify/data/assignments/` (E1..E9 assignment JSON + manifest)
+- `papadiamantis-eval-netlify/scripts/` (generation + parsing utilities)
+
+---
 
 ## Quick start (local)
+
+Serve the repo root and open the **correct subpath**:
+
 ```bash
-python -m http.server 8000
-# open: http://localhost:8000/?expert=E1
-```
-
-## Deploy on Netlify
-**Drag & drop**
-1. Upload the folder/zip in Netlify.
-2. Visit: `https://YOUR_SITE.netlify.app/?expert=E1`
-3. Submissions: Netlify → Site → Forms → `papadiamantis-eval`.
-
-**GitHub**
-1. Push these files to a repo.
-2. Netlify → Import from Git → deploy.
-
-## Plug in your real clusterings
-Option A (manual): create
-- `data/clusterings/A.json`, `B.json`, `C.json`
-with:
-```json
-{ "clustering_id":"A", "clusters":[{"cluster_id":"0","items":[{"doc_id":"x.txt","title":"x.txt"}]}] }
-```
-
-Option B (recommended): drop your cluster inventories (txt) to:
-- `data/clusterings_raw/TFIDF_ONLY.txt`
-- `data/clusterings_raw/SEMANTIC_ONLY.txt`
-- `data/clusterings_raw/HYBRID_50_50.txt`
-
-Then:
-```bash
-python scripts/generate_assignments.py       --tfidf data/clusterings_raw/TFIDF_ONLY.txt       --semantic data/clusterings_raw/SEMANTIC_ONLY.txt       --hybrid data/clusterings_raw/HYBRID_50_50.txt       --out data
-```
-
-This creates:
-- `data/clusterings/A.json`, `B.json`, `C.json`
-- `data/assignments/E1.json ... E9.json`
-
-## Export + parse submissions
-Netlify → Forms → Export CSV, then:
-```bash
-python scripts/parse_netlify_export.py --csv netlify_export.csv --out parsed_out
-```
-Outputs:
-- `parsed_out/item_ratings.csv`
-- `parsed_out/cluster_ratings.csv`
-- `parsed_out/pair_ratings.csv`
+python3 -m http.server 8000
+# open:
+# http://localhost:8000/papadiamantis-eval-netlify/?expert=E1
