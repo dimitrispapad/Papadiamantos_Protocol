@@ -540,11 +540,15 @@ async function submit(){
 
   $("submitStatus").textContent = "Υποβολή...";
   try{
-    const r = await fetch("/", {
-      method:"POST",
-      headers: {"Content-Type":"application/x-www-form-urlencoded"},
-      body: encodeForm(data)
-    });
+    // Post to the current directory (works both at / and at /papadiamantis-eval-netlify/)
+const postURL = new URL(".", window.location.href).pathname;
+
+const r = await fetch(postURL, {
+  method: "POST",
+  headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  body: encodeForm(data),
+});
+
 
     if(!r.ok){
   const txt = await r.text().catch(()=> "");
