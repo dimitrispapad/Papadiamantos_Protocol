@@ -539,34 +539,35 @@ async function submit(){
   };
 
   $("submitStatus").textContent = "Υποβολή...";
-  try{
-    // Post to the current directory (works both at / and at /papadiamantis-eval-netlify/)
-const postURL = new URL(".", window.location.href).pathname;
+ $("submitStatus").textContent = "Υποβολή...";
+try{
+  // Post to the current directory (works both at / and at /papadiamantis-eval-netlify/)
+  const postURL = new URL(".", window.location.href).pathname;
 
-const r = await fetch(postURL, {
-  method: "POST",
-  headers: { "Content-Type": "application/x-www-form-urlencoded" },
-  body: encodeForm(data),
-});
+  const r = await fetch(postURL, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: encodeForm(data),
+  });
 
-
-    if(!r.ok){
-  const txt = await r.text().catch(()=> "");
-  $("submitStatus").textContent = `Σφάλμα υποβολής (${r.status}). ${txt ? txt.slice(0,120) : ""}`;
-  return;
-}
-
-
-    state.submitted = true;
-    persist();
-
-    showScreen("thanks");
-    $("submitStatus").textContent = "";
-  }catch(e){
-    console.error(e);
-    $("submitStatus").textContent = "Σφάλμα δικτύου. Δοκιμάστε ξανά.";
+  if(!r.ok){
+    const txt = await r.text().catch(()=> "");
+    $("submitStatus").textContent =
+      `Σφάλμα υποβολής (${r.status}). ${txt ? txt.slice(0,120) : ""}`;
     $("btnSubmit").disabled = false;
+    return;
   }
+
+  state.submitted = true;
+  persist();
+
+  showScreen("thanks");
+  $("submitStatus").textContent = "";
+}catch(e){
+  console.error(e);
+  $("submitStatus").textContent = "Σφάλμα δικτύου. Δοκιμάστε ξανά.";
+  $("btnSubmit").disabled = false;
 }
+
 
 window.addEventListener("load", init);
