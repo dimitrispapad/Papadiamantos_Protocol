@@ -26,6 +26,8 @@
   --shadow: 0 10px 30px rgba(0,0,0,.35);
   --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
   --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+
+  --focus: 0 0 0 3px rgba(105,230,255,.25);
 }
 
 *{ box-sizing:border-box; }
@@ -35,6 +37,7 @@ body{
   background:radial-gradient(1200px 600px at 20% 0%, #1b2a66 0%, var(--bg) 55%);
   color:var(--text);
   font-family:var(--sans);
+  font-size:16px;
 }
 
 .topbar{
@@ -48,13 +51,14 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
+  gap:12px;
   z-index:10;
 }
 
 .brand-title{ font-weight:700; }
 .brand-sub{ color:var(--muted); font-size:13px; margin-top:2px; }
 
-.meta{ display:flex; gap:10px; }
+.meta{ display:flex; gap:10px; flex-wrap:wrap; }
 
 .badge{
   border:1px solid rgba(255,255,255,.12);
@@ -67,7 +71,7 @@ body{
 
 .container{
   max-width:980px;
-  margin:24px auto 80px; /* extra space for fixed footer */
+  margin:24px auto 110px; /* leave room for fixed footer */
   padding:0 16px;
 }
 
@@ -81,7 +85,7 @@ body{
 
 .hidden{ display:none !important; }
 
-h1{ margin:6px 0 10px; font-size:22px; }
+h1{ margin:6px 0 10px; font-size:22px; line-height:1.25; }
 h2{ margin:14px 0 8px; font-size:16px; color:var(--accent); }
 
 p, ul{ line-height:1.55; }
@@ -104,7 +108,7 @@ code{
   border-radius:8px;
 }
 
-.actions{ display:flex; gap:10px; margin-top:12px; }
+.actions{ display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
 
 .btn{
   background:var(--btn);
@@ -121,6 +125,11 @@ code{
 .btn.primary{
   background:linear-gradient(90deg, rgba(105,230,255,.28), rgba(165,255,176,.18));
   border:1px solid rgba(105,230,255,.35);
+}
+
+.btn:focus-visible{
+  outline:none;
+  box-shadow: var(--focus);
 }
 
 .btn.primary:disabled{
@@ -179,6 +188,7 @@ code{
   color:var(--muted);
 }
 
+/* Likert scale: larger tap targets + clear selected state */
 .scale{
   margin-top:10px;
   display:flex;
@@ -191,14 +201,41 @@ code{
   gap:6px;
   align-items:center;
   border:1px solid rgba(255,255,255,.10);
-  padding:7px 10px;
+  padding:10px 12px;
   border-radius:12px;
   cursor:pointer;
   user-select:none;
   background:rgba(18,26,51,.35);
+  min-height:44px; /* mobile tap target */
 }
 
-.scale input{ accent-color:var(--accent); }
+/* Hide native radio visually but keep accessible */
+.scale input{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+}
+
+.scale label span{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:22px;
+  font-weight:700;
+}
+
+/* Fallback selected indicator */
+.scale input:checked + span{
+  color: var(--text);
+  text-shadow: 0 0 12px rgba(105,230,255,.25);
+}
+
+/* Modern browsers: highlight whole label when selected */
+.scale label:has(input:checked){
+  border-color: rgba(105,230,255,.45);
+  box-shadow: 0 0 0 3px rgba(105,230,255,.12);
+  background: rgba(105,230,255,.10);
+}
 
 .row{
   display:flex;
@@ -212,10 +249,17 @@ code{
   display:flex;
   align-items:center;
   gap:8px;
-  padding:8px 10px;
+  padding:10px 12px;
   border-radius:12px;
   border:1px solid rgba(255,255,255,.10);
   background:rgba(18,26,51,.35);
+  min-height:44px;
+}
+
+.toggle input{
+  width:18px;
+  height:18px;
+  accent-color: var(--accent);
 }
 
 textarea,
@@ -227,9 +271,16 @@ input[type="text"]{
   border-radius:12px;
   padding:10px;
   outline:none;
+  font-size:15px;
 }
 
-textarea{ min-height:80px; resize:vertical; }
+textarea:focus-visible,
+input[type="text"]:focus-visible{
+  box-shadow: var(--focus);
+  border-color: rgba(105,230,255,.35);
+}
+
+textarea{ min-height:90px; resize:vertical; }
 
 hr{
   border:none;
@@ -249,4 +300,36 @@ hr{
   gap:10px;
   background:rgba(11,16,32,.82);
   border-top:1px solid rgba(255,255,255,.08);
+}
+
+/* Mobile layout */
+@media (max-width: 640px){
+  .topbar{
+    padding:12px 14px;
+    flex-direction:column;
+    align-items:flex-start;
+  }
+  .task-header{
+    flex-direction:column;
+    align-items:stretch;
+  }
+  .task-nav{
+    width:100%;
+  }
+  .task-nav .btn{
+    flex:1;
+  }
+  .container{
+    padding:0 12px;
+    margin-bottom:130px;
+  }
+  .card{
+    padding:14px;
+  }
+  h1{ font-size:20px; }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *{ scroll-behavior:auto !important; }
 }
