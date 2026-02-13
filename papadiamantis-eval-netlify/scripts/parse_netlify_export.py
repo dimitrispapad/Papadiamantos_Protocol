@@ -218,3 +218,134 @@ def main():
     expert_id = p.get("expert_id")
     assignment_id = p.get("assignment_id")
     submitted_at = p.get("submitted_at") or rec["ts"].isoformat()
+    app_version = p.get("app_version") or ""
+    submission_uuid = p.get("submission_uuid") or ""
+    client_session_id = p.get("client_session_id") or ""
+    primary_clustering_id = p.get("primary_clustering_id") or ""
+
+    tasks = p.get("tasks", []) or []
+    answers = p.get("answers", {}) or {}
+    task_time_ms = p.get("task_time_ms", {}) or {}
+
+    task_by_key = build_task_index(tasks)
+
+    # answers keys are task_uid (preferred) or task_id (fallback)
+    for task_key, ans in answers.items():
+      t = task_by_key.get(task_key, {}) or {}
+      ttype = t.get("type")
+
+      clustering_id = t.get("clustering_id")
+      role = t.get("assignment_role") or ""
+
+      time_ms = task_time_ms.get(task_key)
+      if time_ms is None:
+        # also try via task_uid/task_id alternative
+        tu = norm_str(t.get("task_uid"))
+        ti = norm_str(t.get("task_id"))
+        time_ms = task_time_ms.get(tu) if tu else None
+        if time_ms is None and ti:
+          time_ms = task_time_ms.get(ti)
+
+      if ttype == "cluster":
+        cluster_id = t.get("cluster_id")
+        batch_index = t.get("batch_index")
+
+        cluster_rows.append({
+          "expert_id": expert_id,
+          "assignment_id": assignment_id,
+          "primary_clustering_id": primary_clustering_id,
+          "submitted_at": submitted_at,
+          "app_version": app_version,
+          "client_session_id": client_session_id,
+          "submission_uuid": submission_uuid,
+
+          "task_key": task_key,
+          "task_uid": t.get("task_uid") or "",
+          "task_id": t.get("task_id") or "",
+          "assignment_role": role,
+
+          "clustering_id": clustering_id,
+          "cluster_id": cluster_id,
+          "batch_index": batch_index if batch_index is not None else "",
+
+          "cluster_label": norm_str(ans.get("cluster_label")),
+          "cluster_note": norm_str(ans.get("cluster_note")),
+          "task_time_ms": time_ms if time_ms is not None else "",
+        })
+
+        items = ans.get("items") or {}
+        for doc_id, ia in items.items():
+          item_rows.append({
+            "expert_id": expert_id,
+            "assignment_id": assignment_id,
+            "primary_clustering_id": primary_clustering_id,
+            "submitted_at": submitted_at,
+            "app_version": app_version,
+            "client_session_id": client_session_id,
+            "submission_uuid": submission_uuid,
+
+            "task_key": task_key,
+            "task_uid": t.get("task_uid") or "",
+            "task_id": t.get("task_id") or "",
+            "assignment_role": role,
+
+            "clustering_id": clustering_id,
+            "cluster_id": cluster_id,
+            "batch_index": batch_index if batch_index is not None else "",
+
+            "doc_id": doc_id,
+            "coherence": ia.get("coherence"),
+            "misplaced": int(bool(ia.get("misplaced"))),
+            "note": norm_str(ia.get("note")),
+            "task_time_ms": time_ms if time_ms is not None else "",
+          })
+
+      elif ttype == "pair":
+        pair_rows.append({
+          "expert_id": expert_id,
+          "assignment_id": assignment_id,
+          "primary_clustering_id": primary_clustering_id,
+          "submitted_at": submitted_at,
+          "app_version": app_version,
+          "client_session_id": client_session_id,
+          "submission_uuid": submission_uuid,
+
+          "task_key": task_key,
+          "task_uid": t.get("task_uid") or "",
+          "task_id": t.get("task_id") or "",
+          "assignment_role": role,
+
+          "clustering_id": clustering_id,
+          "pair_id": t.get("pair_id") or "",
+          "doc1": (t.get("doc1") or {}).get("doc_id") if isinstance(t.get("doc1"), dict) else "",
+          "doc2": (t.get("doc2") or {}).get("doc_id") if isinstance(t.get("doc2"), dict) else "",
+          "same_cluster": int(bool(t.get("same_cluster"))),
+          "relatedness": ans.get("relatedness"),
+          "common_theme": norm_str(ans.get("common_theme")),
+          "note": norm_str(ans.get("note")),
+          "task_time_ms": time_ms if time_ms is not None else "",
+        })
+
+      else:
+        # Unknown task types are ignored (future-proof)
+        pass
+
+  # Write outputs
+  write_csv(os.path.join(args.out, "submissions.csv"), submissions_rows)
+  write_csv(os.path.join(args.out, "item_ratings.csv"), item_rows)
+  write_csv(os.path.join(args.out, "cluster_ratings.csv"), cluster_rows)
+  write_csv(os.path.join(args.out, "pair_ratings.csv"), pair_rows)
+
+  kept_n = sum(int(r["kept"]) for r in submissions_rows)
+  print("OK:")
+  print(f"  submissions parsed: {len(submissions_rows)} (kept={kept_n}, duplicates={len(submissions_rows)-kept_n})")
+  print(f"  parse errors (payload JSON): {parse_errors}")
+  print(f"  item rows: {len(item_rows)}")
+  print(f"  cluster rows: {len(cluster_rows)}")
+  print(f"  pair rows: {len(pair_rows)}")
+  if not args.keep_duplicates:
+    print("  ratings outputs are based on kept submissions only (latest per expert/assignment/session).")
+
+
+if __name__ == "__main__":
+  main()
