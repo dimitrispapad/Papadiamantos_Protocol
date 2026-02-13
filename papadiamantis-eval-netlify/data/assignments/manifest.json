@@ -1,0 +1,29 @@
+{
+  "assignment_id": "pap_eval_seed42_m5_pairs18",
+  "seed": 42,
+  "items_per_t1_task": 5,
+  "anchors_per_clustering": 1,
+  "crossover_tasks_per_other": 1,
+  "pairs_per_expert": 18,
+  "primaries": {
+    "A": [
+      "E1",
+      "E2",
+      "E3"
+    ],
+    "B": [
+      "E4",
+      "E5",
+      "E6"
+    ],
+    "C": [
+      "E7",
+      "E8",
+      "E9"
+    ]
+  },
+  "notes": {
+    "t1": "Coverage-first batches: each doc appears exactly once per clustering in T1 base pool; anchors are reused across experts.",
+    "t2": "Unique pairs per clustering from a global pool; allocated by popping (no repeats across experts until pool exhausted)."
+  }
+}
