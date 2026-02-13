@@ -119,13 +119,20 @@ will greatly help us to assess the thematic coherence in Alexandros Papadiamanti
 
     <!-- Netlify form: must exist in HTML at build time -->
     <form name="papadiamantis-eval" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="hidden">
-      <input type="hidden" name="form-name" value="papadiamantis-eval" />
-      <p class="hidden"><label>Don’t fill this out: <input name="bot-field" /></label></p>
-      <input type="text" name="expert_id" />
-      <input type="text" name="assignment_id" />
-      <input type="text" name="app_version" />
-      <textarea name="payload"></textarea>
-    </form>
+  <input type="hidden" name="form-name" value="papadiamantis-eval" />
+  <p class="hidden"><label>Don’t fill this out: <input name="bot-field" /></label></p>
+
+  <input type="text" name="expert_id" />
+  <input type="text" name="assignment_id" />
+  <input type="text" name="app_version" />
+
+  <!-- added -->
+  <input type="text" name="submission_uuid" />
+  <input type="text" name="client_session_id" />
+
+  <textarea name="payload"></textarea>
+</form>
+
   </main>
 
   <footer class="footer">
