@@ -1,21 +1,14 @@
 const APP_VERSION = "0.2.0";
-const NETLIFY_FORM_NAME = "papadiamantis-eval"; // MUST match index.html form name
+const NETLIFY_FORM_NAME = "papadiamantis-eval"; // MUST match index.html form name + hidden form-name value
 const STORAGE_PREFIX = "pap_eval_v2";
-
 
 function qs(name){ return new URL(window.location.href).searchParams.get(name); }
 function $(id){ return document.getElementById(id); }
 function clamp(n, lo, hi){ return Math.max(lo, Math.min(hi, n)); }
 function nowISO(){ return new Date().toISOString(); }
 
-function encodeForm(data){
-  const params = new URLSearchParams();
-  Object.entries(data).forEach(([k,v]) => params.append(k, v));
-  return params.toString();
-}
-
 async function loadJSON(path){
-  const r = await fetch(path, {cache:"no-store"});
+  const r = await fetch(path, { cache: "no-store" });
   if(!r.ok) throw new Error(`Failed to load ${path}: ${r.status}`);
   return await r.json();
 }
@@ -43,36 +36,12 @@ function defaultState(){
     submitted:false,
     lastSubmissionUuid:null,
 
-    // lightweight timing (optional but useful)
+    // lightweight timing
     taskTimeMs:{},
     _lastTaskKey:null,
     _lastTaskEnterAt:null
   };
 }
-function submitViaNetlifyForm(data){
-  const form = document.getElementById("netlifyForm");
-  const iframe = document.querySelector('iframe[name="netlify_iframe"]');
-  if(!form) throw new Error("netlifyForm not found in index.html");
-  if(!iframe) throw new Error("netlify_iframe not found in index.html");
-
-  // Fill fields by name
-  for(const [k,v] of Object.entries(data)){
-    const el = form.elements[k];
-    if(el) el.value = String(v ?? "");
-  }
-
-  return new Promise((resolve) => {
-    const done = () => { iframe.removeEventListener("load", done); resolve(); };
-    iframe.addEventListener("load", done);
-
-    form.submit();
-
-    // safety fallback
-    setTimeout(resolve, 2500);
-  });
-}
-
-
 
 function saveState(key, state){ localStorage.setItem(key, JSON.stringify(state)); }
 function loadState(key){
@@ -82,7 +51,6 @@ function loadState(key){
 }
 
 function randomId(prefix=""){
-  // crypto-safe UUID-ish, short
   const buf = new Uint8Array(12);
   crypto.getRandomValues(buf);
   const s = Array.from(buf).map(b => b.toString(16).padStart(2,"0")).join("");
@@ -90,9 +58,10 @@ function randomId(prefix=""){
 }
 
 function getAnswerKey(task){
-  // task_uid is stable across reordering; fallback to task_id for backward compatibility
   return task.task_uid || task.task_id;
 }
+
+let assignment=null, expertId=null, stateKey=null, state=null;
 
 function ensureClientSessionId(){
   const k = `${STORAGE_PREFIX}::client_session_id::${expertId || "unknown"}`;
@@ -103,6 +72,42 @@ function ensureClientSessionId(){
   }
   return v;
 }
+
+/**
+ * Netlify Forms reliable submit:
+ * - A real <form data-netlify="true"> exists in HTML at build time
+ * - We fill its fields
+ * - We submit it into a hidden iframe so user stays on page
+ */
+function submitViaNetlifyForm(data){
+  const form = document.getElementById("netlifyForm");
+  const iframe = document.querySelector('iframe[name="netlify_iframe"]');
+
+  if(!form) throw new Error("netlifyForm not found in index.html");
+  if(!iframe) throw new Error("netlify_iframe not found in index.html");
+
+  for(const [k,v] of Object.entries(data)){
+    const el = form.elements[k];
+    if(el) el.value = String(v ?? "");
+  }
+
+  return new Promise((resolve) => {
+    let doneCalled = false;
+    const done = () => {
+      if(doneCalled) return;
+      doneCalled = true;
+      iframe.removeEventListener("load", done);
+      resolve();
+    };
+
+    iframe.addEventListener("load", done);
+    form.submit();
+
+    // fallback in case iframe load doesn't fire (rare)
+    setTimeout(done, 2500);
+  });
+}
+
 function renderAdminExpertLinks(){
   if (qs("admin") !== "1") return;
 
@@ -110,9 +115,7 @@ function renderAdminExpertLinks(){
   const wrap = $("expertLinks");
   if (!box || !wrap) return;
 
-  // Bulletproof: works even if CSS uses !important
-  box.classList.remove("admin-only");
-
+  box.style.display = "block";
   wrap.innerHTML = "";
 
   const base = new URL(window.location.href);
@@ -129,7 +132,6 @@ function renderAdminExpertLinks(){
     wrap.appendChild(a);
   }
 }
-
 
 function renderScale(name, currentValue, onChange){
   const wrap = document.createElement("div");
@@ -160,7 +162,6 @@ function renderClusterTask(task, answer, onUpdate){
   body.appendChild(intro);
 
   const a = answer || { items:{}, cluster_label:"", cluster_note:"" };
-
   const itemsWrap = document.createElement("div");
   itemsWrap.className = "grid";
 
@@ -190,7 +191,6 @@ function renderClusterTask(task, answer, onUpdate){
       card.appendChild(ex);
     }
 
-    // Use stable task key to avoid collisions across regenerated assignments
     card.appendChild(renderScale(`coh_${taskKey}_${itemKey}`, itemAns.coherence, (val)=>{
       itemAns.coherence = val;
       a.items[itemKey] = itemAns;
@@ -285,19 +285,18 @@ function renderPairTask(task, answer, onUpdate){
 
   const taskKey = getAnswerKey(task);
 
+  // IMPORTANT: rerender ONLY when crossing the >=4 threshold (fixes “1 letter then stops typing”)
   card.appendChild(renderScale(`rel_${taskKey}`, a.relatedness, (val)=>{
-  const prev = Number(a.relatedness || 0);
-  const next = Number(val);
+    const prev = Number(a.relatedness || 0);
+    const next = Number(val);
 
-  a.relatedness = next;
-  onUpdate(a);
+    a.relatedness = next;
+    onUpdate(a);
 
-  // rerender only when we must show/hide the "common_theme" field
-  if ((prev >= 4) !== (next >= 4)) {
-    render();
-  }
-}));
-
+    if ((prev >= 4) !== (next >= 4)) {
+      render(); // show/hide the common_theme field
+    }
+  }));
 
   const note = document.createElement("input");
   note.type = "text";
@@ -349,10 +348,7 @@ function validateTask(task, answer){
   return {ok:true, msg:""};
 }
 
-let assignment=null, expertId=null, stateKey=null, state=null;
-
 function showScreen(name){
-  // name: welcome | task | submit | thanks
   $("screenWelcome").classList.toggle("hidden", name !== "welcome");
   $("screenTask").classList.toggle("hidden", name !== "task");
   $("screenSubmit").classList.toggle("hidden", name !== "submit");
@@ -382,7 +378,7 @@ function computeClusterBatchInfo(task){
     t.cluster_id === task.cluster_id
   );
   if(same.length <= 1) return null;
-  // Sort by batch_index if present
+
   const sorted = same.slice().sort((a,b)=>(a.batch_index ?? 0) - (b.batch_index ?? 0));
   const idx = sorted.findIndex(t => getAnswerKey(t) === getAnswerKey(task));
   return { k: idx >= 0 ? (idx+1) : null, K: sorted.length };
@@ -428,18 +424,15 @@ async function init(){
     stateKey = storageKey(expertId, assignment.assignment_id);
     state = loadState(stateKey) || defaultState();
 
-    // ensure stable client session id
     if(!state.clientSessionId){
       state.clientSessionId = ensureClientSessionId();
     }
 
-    // Resume logic
     updateBadges(expertId, state.taskIndex, assignment.tasks.length);
 
     if(state.submitted){
       showScreen("thanks");
     }else if(state.started){
-      // if user already finished tasks, go to submit
       if(state.taskIndex >= assignment.tasks.length){
         showScreen("submit");
       }else{
@@ -472,7 +465,6 @@ function render(){
   updateBadges(expertId, state.taskIndex, assignment.tasks.length);
 
   if(state.taskIndex >= assignment.tasks.length){
-    // finalize timing for last task view
     updateTimingOnTaskSwitch(null);
     showScreen("submit");
     return;
@@ -503,11 +495,10 @@ function render(){
 
   let node=null;
   if(task.type === "cluster"){
-  node = renderClusterTask(task, ans, onUpdate);
-}else{
-  node = renderPairTask(task, ans, onUpdate); // <-- no render() on every update
-}
-
+    node = renderClusterTask(task, ans, onUpdate);
+  }else{
+    node = renderPairTask(task, ans, onUpdate); // no rerender on typing
+  }
   body.appendChild(node);
 
   $("btnBack").disabled = state.taskIndex === 0;
@@ -614,128 +605,5 @@ async function submit(){
     $("btnSubmit").disabled = false;
   }
 }
-
-
-
-  // Send a compact task digest (enough for analysis, avoids huge payload)
-  const taskDigest = assignment.tasks.map(t => {
-    const base = {
-      task_uid: t.task_uid || null,
-      task_id: t.task_id || null,
-      type: t.type,
-      clustering_id: t.clustering_id
-    };
-    if(t.type === "cluster"){
-      return {
-        ...base,
-        cluster_id: t.cluster_id,
-        batch_index: t.batch_index ?? null,
-        items: (t.items || []).map(it => ({ doc_id: it.doc_id, title: it.title || it.doc_id }))
-      };
-    }
-    if(t.type === "pair"){
-      return {
-        ...base,
-        pair_id: t.pair_id || null,
-        doc1: { doc_id: t.doc1?.doc_id, title: t.doc1?.title || t.doc1?.doc_id },
-        doc2: { doc_id: t.doc2?.doc_id, title: t.doc2?.title || t.doc2?.doc_id },
-        same_cluster: !!t.same_cluster
-      };
-    }
-    return base;
-  });
-
-  const payload = {
-    expert_id: expertId,
-    assignment_id: assignment.assignment_id,
-    primary_clustering_id: assignment.primary_clustering_id || null,
-
-    app_version: APP_VERSION,
-    submission_uuid: submissionUuid,
-    client_session_id: state.clientSessionId,
-
-    submitted_at: nowISO(),
-    started_at: state.startedAt,
-    finished_at: state.finishedAt,
-
-    meta: {
-      user_agent: navigator.userAgent,
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
-    },
-
-    task_time_ms: state.taskTimeMs || {},
-
-    tasks: taskDigest,
-    answers: state.answers
-  };
-
-   $("submitStatus").textContent = "Υποβολή...";
-
-  try {
-    const form = document.querySelector('form[name="papadiamantis-eval"]');
-    if (!form) {
-      $("submitStatus").textContent = "Internal error: Netlify form not found in page HTML.";
-      $("btnSubmit").disabled = false;
-      return;
-    }
-
-    // Populate hidden fields (Netlify captures these reliably)
-    form.querySelector('input[name="expert_id"]').value = expertId;
-    form.querySelector('input[name="assignment_id"]').value = assignment.assignment_id;
-    form.querySelector('input[name="app_version"]').value = APP_VERSION;
-    form.querySelector('input[name="submission_uuid"]').value = submissionUuid;
-    form.querySelector('input[name="client_session_id"]').value = state.clientSessionId;
-    form.querySelector('textarea[name="payload"]').value = JSON.stringify(payload);
-
-    // action="." in HTML makes this subpath-safe
-    const action = form.getAttribute("action") || ".";
-    const postURL = new URL(action, window.location.href).pathname;
-
-      // Fill the hidden Netlify form (this makes Netlify reliably capture fields)
-  const form = document.getElementById("netlifyForm");
-  if(!form){
-    $("submitStatus").textContent = "Internal error: netlifyForm not found in index.html";
-    $("btnSubmit").disabled = false;
-    return;
-  }
-
-  // Ensure schema matches what Netlify detected at build time
-  form.elements["form-name"].value = NETLIFY_FORM_NAME;
-  form.elements["expert_id"].value = expertId;
-  form.elements["assignment_id"].value = assignment.assignment_id;
-  form.elements["app_version"].value = APP_VERSION;
-  form.elements["submission_uuid"].value = submissionUuid;
-  form.elements["client_session_id"].value = state.clientSessionId;
-  form.elements["payload"].value = JSON.stringify(payload);
-
-  const formData = new FormData(form);
-
-  try{
-    const r = await fetch(form.getAttribute("action") || "/index.html", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams(formData).toString(),
-    });
-
-    if(!r.ok){
-      const txt = await r.text().catch(()=> "");
-      $("submitStatus").textContent =
-        `Σφάλμα υποβολής (${r.status}). ${txt ? txt.slice(0,160) : ""}`;
-      $("btnSubmit").disabled = false;
-      return;
-    }
-
-    state.submitted = true;
-    persist();
-    showScreen("thanks");
-    $("submitStatus").textContent = "";
-  }catch(e){
-    console.error(e);
-    $("submitStatus").textContent = "Σφάλμα δικτύου. Δοκιμάστε ξανά.";
-    $("btnSubmit").disabled = false;
-  }
-
-
-} // <-- THIS closes submit()
 
 window.addEventListener("load", init);
