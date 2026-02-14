@@ -260,10 +260,18 @@ function renderPairTask(task, answer, onUpdate){
   const taskKey = getAnswerKey(task);
 
   card.appendChild(renderScale(`rel_${taskKey}`, a.relatedness, (val)=>{
-    a.relatedness = val;
-    onUpdate(a);
-    // caller will rerender
-  }));
+  const prev = Number(a.relatedness || 0);
+  const next = Number(val);
+
+  a.relatedness = next;
+  onUpdate(a);
+
+  // rerender only when we must show/hide the "common_theme" field
+  if ((prev >= 4) !== (next >= 4)) {
+    render();
+  }
+}));
+
 
   const note = document.createElement("input");
   note.type = "text";
