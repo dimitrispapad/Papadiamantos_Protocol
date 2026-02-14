@@ -78,25 +78,32 @@ function ensureClientSessionId(){
   return v;
 }
 function renderAdminExpertLinks(){
-  // Show only for you: add &admin=1 in the URL
   if (qs("admin") !== "1") return;
 
   const box = $("adminExpertPicker");
   const wrap = $("expertLinks");
   if (!box || !wrap) return;
 
-  box.style.display = "block";
+  // Bulletproof: works even if CSS uses !important
+  box.classList.remove("admin-only");
+
   wrap.innerHTML = "";
 
+  const base = new URL(window.location.href);
   for (let i = 1; i <= 9; i++) {
     const ex = `E${i}`;
+    const u = new URL(base);
+    u.searchParams.set("expert", ex);
+    u.searchParams.set("admin", "1");
+
     const a = document.createElement("a");
     a.className = "btn small";
-    a.href = `?expert=${ex}&admin=1`;
+    a.href = u.pathname + u.search;
     a.textContent = ex;
     wrap.appendChild(a);
   }
 }
+
 
 function renderScale(name, currentValue, onChange){
   const wrap = document.createElement("div");
@@ -560,7 +567,6 @@ async function submit(){
   };
 
   $("submitStatus").textContent = "Υποβολή...";
- $("submitStatus").textContent = "Υποβολή...";
 try{
   // Post to the current directory (works both at / and at /papadiamantis-eval-netlify/)
   const postURL = new URL(".", window.location.href).pathname;
@@ -589,6 +595,11 @@ try{
   $("submitStatus").textContent = "Σφάλμα δικτύου. Δοκιμάστε ξανά.";
   $("btnSubmit").disabled = false;
 }
+
+} // <-- THIS closes submit()
+
+window.addEventListener("load", init);
+
 
 
 window.addEventListener("load", init);
