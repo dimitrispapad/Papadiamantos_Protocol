@@ -1,4 +1,5 @@
 const APP_VERSION = "0.2.0";
+const NETLIFY_FORM_NAME = "papadiamantis-eval-v2";
 const STORAGE_PREFIX = "pap_eval_v2";
 
 function qs(name){ return new URL(window.location.href).searchParams.get(name); }
@@ -587,15 +588,36 @@ async function submit(){
     const action = form.getAttribute("action") || ".";
     const postURL = new URL(action, window.location.href).pathname;
 
-    const r = await fetch(postURL, {
+      // Fill the hidden Netlify form (this makes Netlify reliably capture fields)
+  const form = document.getElementById("netlifyForm");
+  if(!form){
+    $("submitStatus").textContent = "Internal error: netlifyForm not found in index.html";
+    $("btnSubmit").disabled = false;
+    return;
+  }
+
+  // Ensure schema matches what Netlify detected at build time
+  form.elements["form-name"].value = NETLIFY_FORM_NAME;
+  form.elements["expert_id"].value = expertId;
+  form.elements["assignment_id"].value = assignment.assignment_id;
+  form.elements["app_version"].value = APP_VERSION;
+  form.elements["submission_uuid"].value = submissionUuid;
+  form.elements["client_session_id"].value = state.clientSessionId;
+  form.elements["payload"].value = JSON.stringify(payload);
+
+  const formData = new FormData(form);
+
+  try{
+    const r = await fetch(form.getAttribute("action") || "/index.html", {
       method: "POST",
-      body: new FormData(form),
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams(formData).toString(),
     });
 
-    if (!r.ok) {
-      const txt = await r.text().catch(() => "");
+    if(!r.ok){
+      const txt = await r.text().catch(()=> "");
       $("submitStatus").textContent =
-        `Σφάλμα υποβολής (${r.status}). ${txt ? txt.slice(0,120) : ""}`;
+        `Σφάλμα υποβολής (${r.status}). ${txt ? txt.slice(0,160) : ""}`;
       $("btnSubmit").disabled = false;
       return;
     }
@@ -604,11 +626,12 @@ async function submit(){
     persist();
     showScreen("thanks");
     $("submitStatus").textContent = "";
-  } catch (e) {
+  }catch(e){
     console.error(e);
     $("submitStatus").textContent = "Σφάλμα δικτύου. Δοκιμάστε ξανά.";
     $("btnSubmit").disabled = false;
   }
+
 
 } // <-- THIS closes submit()
 
