@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Αξιολόγηση Κατηγοριοποίησης των διηγημάτων του Αλέξανδρου Παπαδιαμάντη</title>
   <link rel="stylesheet" href="assets/style.css" />
+  <style>
+    /* keeps admin switcher hidden unless JS turns it on */
+    #adminExpertPicker { display:none; margin-top:14px; }
+    .expert-links { display:flex; gap:8px; flex-wrap:wrap; }
+    .btn.small { padding:6px 10px; border-radius:10px; font-size:13px; }
+  </style>
 </head>
 <body>
   <header class="topbar">
@@ -19,36 +25,35 @@
   </header>
 
   <main class="container">
+
     <section id="screenWelcome" class="card">
-      <h1>Καλώς ήρθατε</h1>
-      <p>
-  Στόχος είναι να αξιολογήσετε εναλλακτικές κατηγοριοποιήσεις των διηγημάτων του Αλέξανδρου Παπαδιαμάντη ως προς τη
-  θεματική συνοχή.
-</p>
+      <div class="welcome">
+        <img src="assets/papadiamantis.png" alt="Alexandros Papadiamantis" class="hero-img" />
+        <h1>Welcome / Καλώς ορίσατε</h1>
 
-<h2>Τι θα κάνετε</h2>
-<ul>
-  <li>
-    <strong>Αξιολόγηση έργων μέσα σε ομάδες (clusters):</strong>
-    Θα δείτε μια ομάδα διηγημάτων που έχουν τοποθετηθεί στην ίδια κατηγορία.
-    Για <em>κάθε</em> έργο, βαθμολογείτε πόσο ταιριάζει θεματικά με την υπόλοιπη ομάδα, σε κλίμακα 1–5:
-    <ul>
-      <li><strong>5</strong> = ταιριάζει πολύ / ανήκει ξεκάθαρα στην ίδια θεματική κατηγορία</li>
-      <li><strong>1</strong> = δεν ταιριάζει / θεωρείται εκτός ομάδας</li>
-    </ul>
-    Προαιρετικά, μπορείτε να προτείνετε μια σύντομη <strong>ετικέτα</strong> (1–5 λέξεις) που περιγράφει το κοινό θεματικό
-    μοτίβο της ομάδας.
-  </li>
+        <p>
+          Thank you for participating in the evaluation of the categorization of Alexandros Papadiamantis' short stories.
+          Your opinions will help us assess thematic coherence across alternative clusterings.
+        </p>
 
-  <li>
-    <strong>Αξιολόγηση ζευγών έργων:</strong>
-    Θα δείτε δύο διηγήματα και θα βαθμολογήσετε τη θεματική τους συνάφεια σε κλίμακα 1–5
-    (από «ασύνδετα» έως «ισχυρή θεματική σύνδεση»).
-    Αν η βαθμολογία είναι <strong>4 ή 5</strong>, γράφετε σε 1–2 προτάσεις το <strong>κοινό θεματικό στοιχείο</strong> που
-    εντοπίζετε.
-  </li>
-</ul>
+        <p>
+          Ευχαριστούμε για τη συμμετοχή στην αξιολόγηση κατηγοριοποιήσεων των διηγημάτων του Αλέξανδρου Παπαδιαμάντη.
+          Οι κρίσεις σας θα μας βοηθήσουν να εκτιμήσουμε τη θεματική συνοχή στο έργο του.
+        </p>
+      </div>
 
+      <h2>Τι θα κάνετε</h2>
+      <ul>
+        <li>
+          <strong>Αξιολόγηση έργων μέσα σε ομάδες (clusters):</strong>
+          Για κάθε έργο βαθμολογείτε τη θεματική συνάφεια (1–5) και επισημαίνετε «εκτός ομάδας» όπου χρειάζεται.
+          Προαιρετικά προσθέτετε ετικέτα/σχόλιο για το θέμα της ομάδας.
+        </li>
+        <li>
+          <strong>Αξιολόγηση ζευγών έργων:</strong>
+          Βαθμολογείτε τη θεματική συγγένεια (1–5). Αν βάλετε 4 ή 5, γράφετε το κοινό θεματικό στοιχείο (1–2 φράσεις).
+        </li>
+      </ul>
 
       <h2>Ανώνυμα δεδομένα & εθελοντική συμμετοχή</h2>
       <p>
@@ -66,34 +71,14 @@
       <div class="actions">
         <button id="btnStart" class="btn primary" disabled>Έναρξη</button>
       </div>
-<div class="welcome">
-  <img src="assets/Papadiamantis.png" alt="Alexandros Papadiamantis" class="hero-img" />
 
-  <h1>Welcome / Καλώς ορίσατε</h1>
-
-  <p>
-    Thank you for participating in the evaluation of the categorization of Alexandros Papadiamantis' short stories. Your opinions
-will greatly help us to assess the thematic coherence in Alexandros Papadiamantis' work.
-  </p>
-
-  <p>
-    Ευχαριστούμε για τη συμμετοχή στην αξιολόγηση κατηγοριοποιήσεων των διηγημάτων του Αλέξανδρου Παπαδιαμάντη. Οι κρίσεις σας
-    θα μας βοηθήσουν πολύ να εκτιμήσουμε τη θεματική συνοχή στο έργο του Αλέξανδρου Παπαδιαμάντη.
-  </p>
-</div>
-
-      <p class="hint">
-  Tip: ανοίξτε το link ως <code>?expert=E1</code>. Η πρόοδός σας αποθηκεύεται αυτόματα στον browser.
-</p>
-
-<div id="adminExpertPicker" class="admin-only">
-  <h2>Admin: Expert switcher</h2>
-  <div id="expertLinks" class="expert-links"></div>
-  <p class="muted">Visible only when URL has <code>&admin=1</code>.</p>
-</div>
-
-</section>
-
+      <!-- Admin expert switcher (ONLY when URL has &admin=1) -->
+      <div id="adminExpertPicker" class="card" style="margin-top:16px;">
+        <h2>Admin: Expert switcher</h2>
+        <div id="expertLinks" class="expert-links"></div>
+        <p class="muted">Visible only when URL has <code>&admin=1</code>.</p>
+      </div>
+    </section>
 
     <section id="screenTask" class="card hidden">
       <div class="task-header">
@@ -125,30 +110,28 @@ will greatly help us to assess the thematic coherence in Alexandros Papadiamanti
       <p>Η υποβολή ολοκληρώθηκε. Μπορείτε να κλείσετε αυτό το παράθυρο.</p>
     </section>
 
-  <!-- Netlify form: must exist in HTML at build time -->
-<form
-  id="netlifyForm"
-  name="papadiamantis-eval-v2"
-  method="POST"
-  action="/index.html"
-  data-netlify="true"
-  netlify-honeypot="bot-field"
-  hidden
->
-  <input type="hidden" name="form-name" value="papadiamantis-eval-v2" />
-  <p hidden><label>Don’t fill this out: <input name="bot-field" /></label></p>
+    <!-- Hidden iframe target so form submit doesn't navigate away -->
+    <iframe name="netlify_iframe" style="display:none;"></iframe>
 
-  <input type="hidden" name="expert_id" />
-  <input type="hidden" name="assignment_id" />
-  <input type="hidden" name="app_version" />
-  <input type="hidden" name="submission_uuid" />
-  <input type="hidden" name="client_session_id" />
+    <!-- Netlify form: MUST exist in HTML at build time -->
+    <form id="netlifyForm"
+          name="papadiamantis-eval"
+          method="POST"
+          action="."
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          target="netlify_iframe"
+          style="display:none;">
+      <input type="hidden" name="form-name" value="papadiamantis-eval" />
+      <p style="display:none;"><label>Don’t fill this out: <input name="bot-field" /></label></p>
 
-  <textarea name="payload"></textarea>
-</form>
-    <iframe name="netlify_iframe" style="display:none"></iframe>
-
-
+      <input type="text" name="expert_id" />
+      <input type="text" name="assignment_id" />
+      <input type="text" name="app_version" />
+      <input type="text" name="submission_uuid" />
+      <input type="text" name="client_session_id" />
+      <textarea name="payload"></textarea>
+    </form>
 
   </main>
 
