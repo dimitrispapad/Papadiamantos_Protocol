@@ -556,50 +556,51 @@ async function submit(){
     answers: state.answers
   };
 
-  const data = {
-    "form-name": "papadiamantis-eval",
-    "expert_id": expertId,
-    "assignment_id": assignment.assignment_id,
-    "app_version": APP_VERSION,
-    "submission_uuid": submissionUuid,
-    "client_session_id": state.clientSessionId,
-    "payload": JSON.stringify(payload)
-  };
+   $("submitStatus").textContent = "Υποβολή...";
 
-  $("submitStatus").textContent = "Υποβολή...";
-try{
-  // Post to the current directory (works both at / and at /papadiamantis-eval-netlify/)
-  const postURL = new URL(".", window.location.href).pathname;
+  try {
+    const form = document.querySelector('form[name="papadiamantis-eval"]');
+    if (!form) {
+      $("submitStatus").textContent = "Internal error: Netlify form not found in page HTML.";
+      $("btnSubmit").disabled = false;
+      return;
+    }
 
-  const r = await fetch(postURL, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: encodeForm(data),
-  });
+    // Populate hidden fields (Netlify captures these reliably)
+    form.querySelector('input[name="expert_id"]').value = expertId;
+    form.querySelector('input[name="assignment_id"]').value = assignment.assignment_id;
+    form.querySelector('input[name="app_version"]').value = APP_VERSION;
+    form.querySelector('input[name="submission_uuid"]').value = submissionUuid;
+    form.querySelector('input[name="client_session_id"]').value = state.clientSessionId;
+    form.querySelector('textarea[name="payload"]').value = JSON.stringify(payload);
 
-  if(!r.ok){
-    const txt = await r.text().catch(()=> "");
-    $("submitStatus").textContent =
-      `Σφάλμα υποβολής (${r.status}). ${txt ? txt.slice(0,120) : ""}`;
+    // action="." in HTML makes this subpath-safe
+    const action = form.getAttribute("action") || ".";
+    const postURL = new URL(action, window.location.href).pathname;
+
+    const r = await fetch(postURL, {
+      method: "POST",
+      body: new FormData(form),
+    });
+
+    if (!r.ok) {
+      const txt = await r.text().catch(() => "");
+      $("submitStatus").textContent =
+        `Σφάλμα υποβολής (${r.status}). ${txt ? txt.slice(0,120) : ""}`;
+      $("btnSubmit").disabled = false;
+      return;
+    }
+
+    state.submitted = true;
+    persist();
+    showScreen("thanks");
+    $("submitStatus").textContent = "";
+  } catch (e) {
+    console.error(e);
+    $("submitStatus").textContent = "Σφάλμα δικτύου. Δοκιμάστε ξανά.";
     $("btnSubmit").disabled = false;
-    return;
   }
 
-  state.submitted = true;
-  persist();
-
-  showScreen("thanks");
-  $("submitStatus").textContent = "";
-}catch(e){
-  console.error(e);
-  $("submitStatus").textContent = "Σφάλμα δικτύου. Δοκιμάστε ξανά.";
-  $("btnSubmit").disabled = false;
-}
-
 } // <-- THIS closes submit()
-
-window.addEventListener("load", init);
-
-
 
 window.addEventListener("load", init);
