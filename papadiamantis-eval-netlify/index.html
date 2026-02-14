@@ -125,20 +125,28 @@ will greatly help us to assess the thematic coherence in Alexandros Papadiamanti
       <p>Η υποβολή ολοκληρώθηκε. Μπορείτε να κλείσετε αυτό το παράθυρο.</p>
     </section>
 
-  <form name="papadiamantis-eval" method="POST" action="." data-netlify="true" netlify-honeypot="bot-field" class="hidden">
-  <input type="hidden" name="form-name" value="papadiamantis-eval" />
-  <p class="hidden"><label>Don’t fill this out: <input name="bot-field" /></label></p>
+  <!-- Netlify form: must exist in HTML at build time -->
+<form
+  id="netlifyForm"
+  name="papadiamantis-eval-v2"
+  method="POST"
+  action="/index.html"
+  data-netlify="true"
+  netlify-honeypot="bot-field"
+  hidden
+>
+  <input type="hidden" name="form-name" value="papadiamantis-eval-v2" />
+  <p hidden><label>Don’t fill this out: <input name="bot-field" /></label></p>
 
-  <input type="text" name="expert_id" />
-  <input type="text" name="assignment_id" />
-  <input type="text" name="app_version" />
-
-  <!-- added -->
-  <input type="text" name="submission_uuid" />
-  <input type="text" name="client_session_id" />
+  <input type="hidden" name="expert_id" />
+  <input type="hidden" name="assignment_id" />
+  <input type="hidden" name="app_version" />
+  <input type="hidden" name="submission_uuid" />
+  <input type="hidden" name="client_session_id" />
 
   <textarea name="payload"></textarea>
 </form>
+
 
   </main>
 
