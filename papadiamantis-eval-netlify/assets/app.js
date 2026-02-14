@@ -469,10 +469,11 @@ function render(){
 
   let node=null;
   if(task.type === "cluster"){
-    node = renderClusterTask(task, ans, onUpdate);
-  }else{
-    node = renderPairTask(task, ans, (newAns)=>{ onUpdate(newAns); render(); });
-  }
+  node = renderClusterTask(task, ans, onUpdate);
+}else{
+  node = renderPairTask(task, ans, onUpdate); // <-- no render() on every update
+}
+
   body.appendChild(node);
 
   $("btnBack").disabled = state.taskIndex === 0;
