@@ -1,6 +1,7 @@
 const APP_VERSION = "0.2.0";
-const NETLIFY_FORM_NAME = "papadiamantis-eval-v2";
+const NETLIFY_FORM_NAME = "papadiamantis-eval"; // MUST match index.html form name
 const STORAGE_PREFIX = "pap_eval_v2";
+
 
 function qs(name){ return new URL(window.location.href).searchParams.get(name); }
 function $(id){ return document.getElementById(id); }
@@ -48,6 +49,30 @@ function defaultState(){
     _lastTaskEnterAt:null
   };
 }
+function submitViaNetlifyForm(data){
+  const form = document.getElementById("netlifyForm");
+  const iframe = document.querySelector('iframe[name="netlify_iframe"]');
+  if(!form) throw new Error("netlifyForm not found in index.html");
+  if(!iframe) throw new Error("netlify_iframe not found in index.html");
+
+  // Fill fields by name
+  for(const [k,v] of Object.entries(data)){
+    const el = form.elements[k];
+    if(el) el.value = String(v ?? "");
+  }
+
+  return new Promise((resolve) => {
+    const done = () => { iframe.removeEventListener("load", done); resolve(); };
+    iframe.addEventListener("load", done);
+
+    form.submit();
+
+    // safety fallback
+    setTimeout(resolve, 2500);
+  });
+}
+
+
 
 function saveState(key, state){ localStorage.setItem(key, JSON.stringify(state)); }
 function loadState(key){
@@ -495,7 +520,6 @@ async function submit(){
     return;
   }
 
-  // prevent double click while in-flight
   $("btnSubmit").disabled = true;
 
   for(const t of assignment.tasks){
@@ -513,6 +537,85 @@ async function submit(){
 
   const submissionUuid = randomId("sub");
   state.lastSubmissionUuid = submissionUuid;
+
+  const taskDigest = assignment.tasks.map(t => {
+    const base = {
+      task_uid: t.task_uid || null,
+      task_id: t.task_id || null,
+      type: t.type,
+      clustering_id: t.clustering_id
+    };
+    if(t.type === "cluster"){
+      return {
+        ...base,
+        cluster_id: t.cluster_id,
+        batch_index: t.batch_index ?? null,
+        items: (t.items || []).map(it => ({ doc_id: it.doc_id, title: it.title || it.doc_id }))
+      };
+    }
+    if(t.type === "pair"){
+      return {
+        ...base,
+        pair_id: t.pair_id || null,
+        doc1: { doc_id: t.doc1?.doc_id, title: t.doc1?.title || t.doc1?.doc_id },
+        doc2: { doc_id: t.doc2?.doc_id, title: t.doc2?.title || t.doc2?.doc_id },
+        same_cluster: !!t.same_cluster
+      };
+    }
+    return base;
+  });
+
+  const payload = {
+    expert_id: expertId,
+    assignment_id: assignment.assignment_id,
+    primary_clustering_id: assignment.primary_clustering_id || null,
+
+    app_version: APP_VERSION,
+    submission_uuid: submissionUuid,
+    client_session_id: state.clientSessionId,
+
+    submitted_at: nowISO(),
+    started_at: state.startedAt,
+    finished_at: state.finishedAt,
+
+    meta: {
+      user_agent: navigator.userAgent,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+    },
+
+    task_time_ms: state.taskTimeMs || {},
+    tasks: taskDigest,
+    answers: state.answers
+  };
+
+  const data = {
+    "form-name": NETLIFY_FORM_NAME,
+    "expert_id": expertId,
+    "assignment_id": assignment.assignment_id,
+    "app_version": APP_VERSION,
+    "submission_uuid": submissionUuid,
+    "client_session_id": state.clientSessionId,
+    "payload": JSON.stringify(payload)
+  };
+
+  $("submitStatus").textContent = "Υποβολή...";
+
+  try{
+    await submitViaNetlifyForm(data);
+
+    state.submitted = true;
+    persist();
+
+    showScreen("thanks");
+    $("submitStatus").textContent = "";
+  }catch(e){
+    console.error(e);
+    $("submitStatus").textContent = "Σφάλμα υποβολής. Δοκιμάστε ξανά.";
+    $("btnSubmit").disabled = false;
+  }
+}
+
+
 
   // Send a compact task digest (enough for analysis, avoids huge payload)
   const taskDigest = assignment.tasks.map(t => {
