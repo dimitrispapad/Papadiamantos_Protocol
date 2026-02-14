@@ -333,3 +333,8 @@ hr{
 @media (prefers-reduced-motion: reduce){
   *{ scroll-behavior:auto !important; }
 }
+
+.admin-only { display:none; margin-top:14px; }
+.expert-links { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+.btn.small { padding:8px 10px; border-radius:10px; font-size:13px; }
+
