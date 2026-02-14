@@ -77,6 +77,26 @@ function ensureClientSessionId(){
   }
   return v;
 }
+function renderAdminExpertLinks(){
+  // Show only for you: add &admin=1 in the URL
+  if (qs("admin") !== "1") return;
+
+  const box = $("adminExpertPicker");
+  const wrap = $("expertLinks");
+  if (!box || !wrap) return;
+
+  box.style.display = "block";
+  wrap.innerHTML = "";
+
+  for (let i = 1; i <= 9; i++) {
+    const ex = `E${i}`;
+    const a = document.createElement("a");
+    a.className = "btn small";
+    a.href = `?expert=${ex}&admin=1`;
+    a.textContent = ex;
+    wrap.appendChild(a);
+  }
+}
 
 function renderScale(name, currentValue, onChange){
   const wrap = document.createElement("div");
@@ -329,6 +349,7 @@ function computeClusterBatchInfo(task){
 
 async function init(){
   expertId = qs("expert") || "E1";
+  renderAdminExpertLinks();
   $("expertBadge").textContent = `Expert: ${expertId}`;
 
   $("consentCheck").addEventListener("change", (e)=>{
