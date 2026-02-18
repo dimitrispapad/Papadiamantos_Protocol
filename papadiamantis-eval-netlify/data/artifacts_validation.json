@@ -1,0 +1,35 @@
+{
+  "validation_timestamp": "2026-02-18T13:04:55.205Z",
+  "clusterings": {
+    "A": {
+      "clustering_id": "A",
+      "source_name": "TFIDF_ONLY",
+      "K": 9,
+      "N": 172,
+      "unique_doc_count": 172,
+      "has_duplicates": false,
+      "duplicates": []
+    },
+    "B": {
+      "clustering_id": "B",
+      "source_name": "SEMANTIC_ONLY",
+      "K": 14,
+      "N": 172,
+      "unique_doc_count": 172,
+      "has_duplicates": false,
+      "duplicates": []
+    },
+    "C": {
+      "clustering_id": "C",
+      "source_name": "HYBRID_50_50",
+      "K": 7,
+      "N": 172,
+      "unique_doc_count": 172,
+      "has_duplicates": false,
+      "duplicates": []
+    }
+  },
+  "cross_clustering_doc_equality": "PASS",
+  "expected_N": 172,
+  "all_N_match": "PASS"
+}

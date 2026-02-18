@@ -1,5 +1,5 @@
 [build]
-  publish = "papadiamantis-eval-netlify"
+  publish = "site"
   command = ""
 
 # Avoid stale assignments/clusterings due to caching
@@ -15,4 +15,4 @@
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+    Permissions-Policy = "geolocation=(), microphone=(), camera()"

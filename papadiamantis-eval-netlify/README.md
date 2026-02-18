@@ -6,6 +6,23 @@ The interface presents **two task types** (cluster screens + pair screens), save
 
 ---
 
+## Clustering parameters
+
+| Blind ID | K (clusters) | N (documents) |
+|----------|-------------|---------------|
+| A        | 9           | 172           |
+| B        | 14          | 172           |
+| C        | 7           | 172           |
+
+The A/B/C-to-method mapping is kept internal and is **not shown to experts**.
+
+- **Assignment ID:** `pap_eval_seed42_m5_pairs18_v2`
+- **Seed:** 42
+
+Public hosting does not expose method-labeled artifacts (blinding enforced).
+
+---
+
 ## What experts do (2 task types)
 
 ### T1 — Cluster task (item-level)
@@ -32,7 +49,7 @@ Each expert receives a personalized link:
 
 Experts are **blinded**: clusterings are shown only as **A/B/C** (mapping to TF–IDF, semantic, hybrid is hidden during rating).
 
-Progress is saved in the expert’s browser (localStorage), so they can refresh and continue.
+Progress is saved in the expert's browser (localStorage), so they can refresh and continue.
 
 ---
 
@@ -43,34 +60,56 @@ Progress is saved in the expert’s browser (localStorage), so they can refresh 
   - `expert_id`, `assignment_id`, `app_version`
   - timestamps (`started_at`, `submitted_at`, `finished_at`)
   - stable per-task identifiers (**`task_uid`**) and all answers
-  - idempotency fields: **`client_session_id`** + **`submission_uuid`**  
+  - idempotency fields: **`client_session_id`** + **`submission_uuid`**
     (used to deduplicate accidental re-submissions during preprocessing)
 
 **Important:** tasks are keyed by `task_uid` (stable across reordering/regeneration), avoiding collisions that can occur with sequential task IDs.
 
 ---
 
-## Repository structure (publish directory)
+## Repository structure
 
-Netlify publishes the folder:
+Netlify publishes the `site/` folder, which contains **only** the web app and assignment JSONs needed by experts. Unblinded clustering artifacts remain in the repository but are **not** in the publish directory.
 
-- `papadiamantis-eval-netlify/`
+**Publish directory** (`site/`):
+- `site/index.html`
+- `site/assets/` (UI logic + CSS + image)
+- `site/data/assignments/` (E1..E9 assignment JSON + manifest)
 
-Key paths:
-- `papadiamantis-eval-netlify/index.html`
-- `papadiamantis-eval-netlify/assets/` (UI logic + CSS)
-- `papadiamantis-eval-netlify/data/clusterings_raw/` (input inventories)
-- `papadiamantis-eval-netlify/data/clusterings/` (A/B/C JSON used by the app)
-- `papadiamantis-eval-netlify/data/assignments/` (E1..E9 assignment JSON + manifest)
+**Internal data** (not published):
+- `papadiamantis-eval-netlify/data/clusterings/` (A/B/C JSON with method names)
+- `papadiamantis-eval-netlify/data/clusterings_raw/` (raw clustering text files)
 - `papadiamantis-eval-netlify/scripts/` (generation + parsing utilities)
+
+---
+
+## Validation
+
+A regression validator is provided to ensure the package remains consistent:
+
+```bash
+python scripts/validate_eval_package.py
+```
+
+The validator checks:
+1. No forbidden strings (method names) in the publish directory
+2. Pair uniqueness within each expert and across all experts
+3. Clustering integrity (K, N, doc-set equality)
 
 ---
 
 ## Quick start (local)
 
-Serve the repo root and open the **correct subpath**:
+Serve the `site/` folder directly:
 
 ```bash
-python3 -m http.server 8000
-# open:
-# http://localhost:8000/papadiamantis-eval-netlify/?expert=E1
+cd site && python3 -m http.server 8000
+# open: http://localhost:8000/?expert=E1
+```
+
+Or use Netlify CLI:
+
+```bash
+netlify dev
+# open: http://localhost:8888/?expert=E1
+```

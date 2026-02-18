@@ -1,0 +1,472 @@
+{
+  "validation_timestamp": "2026-02-18T13:04:55.206Z",
+  "manifest": {
+    "assignment_id": "pap_eval_seed42_m5_pairs18",
+    "seed": 42,
+    "items_per_t1_task": 5,
+    "anchors_per_clustering": 1,
+    "crossover_tasks_per_other": 1,
+    "pairs_per_expert": 18,
+    "primaries": {
+      "A": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "B": [
+        "E4",
+        "E5",
+        "E6"
+      ],
+      "C": [
+        "E7",
+        "E8",
+        "E9"
+      ]
+    },
+    "notes": {
+      "t1": "Coverage-first batches: each doc appears exactly once per clustering in T1 base pool; anchors are reused across experts.",
+      "t2": "Unique pairs per clustering from a global pool; allocated by popping (no repeats across experts until pool exhausted)."
+    }
+  },
+  "experts": {
+    "E1": {
+      "expert_id": "E1",
+      "expected_primary": "A",
+      "actual_primary": "A",
+      "primary_match": true,
+      "total_tasks": 35,
+      "t1_tasks": 17,
+      "t2_tasks": 18,
+      "t1_by_clustering": {
+        "A": 13,
+        "C": 2,
+        "B": 2
+      },
+      "anchors_by_clustering": {
+        "B": 1,
+        "C": 1,
+        "A": 1
+      },
+      "crossovers_by_clustering": {
+        "C": 1,
+        "B": 1
+      },
+      "t2_pairs": 18,
+      "max_items_in_t1": 5,
+      "items_over_5": [],
+      "issues": [],
+      "t1_doc_coverage": {
+        "A": {
+          "total_docs": 62,
+          "unique_docs": 62,
+          "duplicates": []
+        },
+        "C": {
+          "total_docs": 7,
+          "unique_docs": 7,
+          "duplicates": []
+        },
+        "B": {
+          "total_docs": 10,
+          "unique_docs": 10,
+          "duplicates": []
+        }
+      }
+    },
+    "E2": {
+      "expert_id": "E2",
+      "expected_primary": "A",
+      "actual_primary": "A",
+      "primary_match": true,
+      "total_tasks": 35,
+      "t1_tasks": 17,
+      "t2_tasks": 18,
+      "t1_by_clustering": {
+        "A": 13,
+        "B": 2,
+        "C": 2
+      },
+      "anchors_by_clustering": {
+        "A": 1,
+        "C": 1,
+        "B": 1
+      },
+      "crossovers_by_clustering": {
+        "B": 1,
+        "C": 1
+      },
+      "t2_pairs": 18,
+      "max_items_in_t1": 5,
+      "items_over_5": [],
+      "issues": [],
+      "t1_doc_coverage": {
+        "A": {
+          "total_docs": 62,
+          "unique_docs": 62,
+          "duplicates": []
+        },
+        "B": {
+          "total_docs": 10,
+          "unique_docs": 10,
+          "duplicates": []
+        },
+        "C": {
+          "total_docs": 6,
+          "unique_docs": 6,
+          "duplicates": []
+        }
+      }
+    },
+    "E3": {
+      "expert_id": "E3",
+      "expected_primary": "A",
+      "actual_primary": "A",
+      "primary_match": true,
+      "total_tasks": 35,
+      "t1_tasks": 17,
+      "t2_tasks": 18,
+      "t1_by_clustering": {
+        "A": 13,
+        "C": 2,
+        "B": 2
+      },
+      "anchors_by_clustering": {
+        "A": 1,
+        "B": 1,
+        "C": 1
+      },
+      "crossovers_by_clustering": {
+        "C": 1,
+        "B": 1
+      },
+      "t2_pairs": 18,
+      "max_items_in_t1": 5,
+      "items_over_5": [],
+      "issues": [],
+      "t1_doc_coverage": {
+        "A": {
+          "total_docs": 58,
+          "unique_docs": 58,
+          "duplicates": []
+        },
+        "C": {
+          "total_docs": 10,
+          "unique_docs": 10,
+          "duplicates": []
+        },
+        "B": {
+          "total_docs": 10,
+          "unique_docs": 10,
+          "duplicates": []
+        }
+      }
+    },
+    "E4": {
+      "expert_id": "E4",
+      "expected_primary": "B",
+      "actual_primary": "B",
+      "primary_match": true,
+      "total_tasks": 37,
+      "t1_tasks": 19,
+      "t2_tasks": 18,
+      "t1_by_clustering": {
+        "B": 15,
+        "A": 2,
+        "C": 2
+      },
+      "anchors_by_clustering": {
+        "B": 1,
+        "C": 1,
+        "A": 1
+      },
+      "crossovers_by_clustering": {
+        "A": 1,
+        "C": 1
+      },
+      "t2_pairs": 18,
+      "max_items_in_t1": 5,
+      "items_over_5": [],
+      "issues": [],
+      "t1_doc_coverage": {
+        "B": {
+          "total_docs": 64,
+          "unique_docs": 64,
+          "duplicates": []
+        },
+        "A": {
+          "total_docs": 10,
+          "unique_docs": 10,
+          "duplicates": []
+        },
+        "C": {
+          "total_docs": 10,
+          "unique_docs": 10,
+          "duplicates": []
+        }
+      }
+    },
+    "E5": {
+      "expert_id": "E5",
+      "expected_primary": "B",
+      "actual_primary": "B",
+      "primary_match": true,
+      "total_tasks": 37,
+      "t1_tasks": 19,
+      "t2_tasks": 18,
+      "t1_by_clustering": {
+        "B": 15,
+        "A": 2,
+        "C": 2
+      },
+      "anchors_by_clustering": {
+        "A": 1,
+        "C": 1,
+        "B": 1
+      },
+      "crossovers_by_clustering": {
+        "C": 1,
+        "A": 1
+      },
+      "t2_pairs": 18,
+      "max_items_in_t1": 5,
+      "items_over_5": [],
+      "issues": [],
+      "t1_doc_coverage": {
+        "B": {
+          "total_docs": 60,
+          "unique_docs": 60,
+          "duplicates": []
+        },
+        "A": {
+          "total_docs": 10,
+          "unique_docs": 10,
+          "duplicates": []
+        },
+        "C": {
+          "total_docs": 10,
+          "unique_docs": 10,
+          "duplicates": []
+        }
+      }
+    },
+    "E6": {
+      "expert_id": "E6",
+      "expected_primary": "B",
+      "actual_primary": "B",
+      "primary_match": true,
+      "total_tasks": 36,
+      "t1_tasks": 18,
+      "t2_tasks": 18,
+      "t1_by_clustering": {
+        "B": 14,
+        "A": 2,
+        "C": 2
+      },
+      "anchors_by_clustering": {
+        "A": 1,
+        "C": 1,
+        "B": 1
+      },
+      "crossovers_by_clustering": {
+        "A": 1,
+        "C": 1
+      },
+      "t2_pairs": 18,
+      "max_items_in_t1": 5,
+      "items_over_5": [],
+      "issues": [],
+      "t1_doc_coverage": {
+        "B": {
+          "total_docs": 58,
+          "unique_docs": 58,
+          "duplicates": []
+        },
+        "A": {
+          "total_docs": 10,
+          "unique_docs": 10,
+          "duplicates": []
+        },
+        "C": {
+          "total_docs": 10,
+          "unique_docs": 10,
+          "duplicates": []
+        }
+      }
+    },
+    "E7": {
+      "expert_id": "E7",
+      "expected_primary": "C",
+      "actual_primary": "C",
+      "primary_match": true,
+      "total_tasks": 36,
+      "t1_tasks": 18,
+      "t2_tasks": 18,
+      "t1_by_clustering": {
+        "B": 2,
+        "C": 14,
+        "A": 2
+      },
+      "anchors_by_clustering": {
+        "A": 1,
+        "B": 1,
+        "C": 1
+      },
+      "crossovers_by_clustering": {
+        "B": 1,
+        "A": 1
+      },
+      "t2_pairs": 18,
+      "max_items_in_t1": 5,
+      "items_over_5": [],
+      "issues": [],
+      "t1_doc_coverage": {
+        "B": {
+          "total_docs": 10,
+          "unique_docs": 10,
+          "duplicates": []
+        },
+        "C": {
+          "total_docs": 62,
+          "unique_docs": 62,
+          "duplicates": []
+        },
+        "A": {
+          "total_docs": 10,
+          "unique_docs": 10,
+          "duplicates": []
+        }
+      }
+    },
+    "E8": {
+      "expert_id": "E8",
+      "expected_primary": "C",
+      "actual_primary": "C",
+      "primary_match": true,
+      "total_tasks": 35,
+      "t1_tasks": 17,
+      "t2_tasks": 18,
+      "t1_by_clustering": {
+        "A": 2,
+        "C": 13,
+        "B": 2
+      },
+      "anchors_by_clustering": {
+        "A": 1,
+        "B": 1,
+        "C": 1
+      },
+      "crossovers_by_clustering": {
+        "A": 1,
+        "B": 1
+      },
+      "t2_pairs": 18,
+      "max_items_in_t1": 5,
+      "items_over_5": [],
+      "issues": [],
+      "t1_doc_coverage": {
+        "A": {
+          "total_docs": 10,
+          "unique_docs": 10,
+          "duplicates": []
+        },
+        "C": {
+          "total_docs": 62,
+          "unique_docs": 62,
+          "duplicates": []
+        },
+        "B": {
+          "total_docs": 10,
+          "unique_docs": 10,
+          "duplicates": []
+        }
+      }
+    },
+    "E9": {
+      "expert_id": "E9",
+      "expected_primary": "C",
+      "actual_primary": "C",
+      "primary_match": true,
+      "total_tasks": 35,
+      "t1_tasks": 17,
+      "t2_tasks": 18,
+      "t1_by_clustering": {
+        "C": 13,
+        "B": 2,
+        "A": 2
+      },
+      "anchors_by_clustering": {
+        "A": 1,
+        "C": 1,
+        "B": 1
+      },
+      "crossovers_by_clustering": {
+        "B": 1,
+        "A": 1
+      },
+      "t2_pairs": 18,
+      "max_items_in_t1": 5,
+      "items_over_5": [],
+      "issues": [],
+      "t1_doc_coverage": {
+        "C": {
+          "total_docs": 58,
+          "unique_docs": 58,
+          "duplicates": []
+        },
+        "B": {
+          "total_docs": 10,
+          "unique_docs": 10,
+          "duplicates": []
+        },
+        "A": {
+          "total_docs": 10,
+          "unique_docs": 10,
+          "duplicates": []
+        }
+      }
+    }
+  },
+  "anchor_sharing": {
+    "B": {
+      "B_c0_b000": [
+        "E1",
+        "E2",
+        "E3",
+        "E4",
+        "E5",
+        "E6",
+        "E7",
+        "E8",
+        "E9"
+      ]
+    },
+    "C": {
+      "C_c0_b001": [
+        "E1",
+        "E2",
+        "E3",
+        "E4",
+        "E5",
+        "E6",
+        "E7",
+        "E8",
+        "E9"
+      ]
+    },
+    "A": {
+      "A_c0_b000": [
+        "E1",
+        "E2",
+        "E3",
+        "E4",
+        "E5",
+        "E6",
+        "E7",
+        "E8",
+        "E9"
+      ]
+    }
+  },
+  "anchor_sharing_issues": []
+}
