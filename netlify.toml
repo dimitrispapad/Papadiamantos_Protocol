@@ -1,18 +1,30 @@
 [build]
-  publish = "papadiamantis-eval-netlify"
-  command = ""
+  publish = "site"
 
-# Avoid stale assignments/clusterings due to caching
+# Defense-in-depth: even if someone accidentally ships these paths, serve 404.
+[[redirects]]
+  from = "/data/clusterings/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/data/clusterings_raw/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/scripts/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
 [[headers]]
   for = "/data/*"
   [headers.values]
     Cache-Control = "no-store"
-
-# Basic hardening + good defaults for a static form app
-[[headers]]
-  for = "/*"
-  [headers.values]
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
-    Referrer-Policy = "strict-origin-when-cross-origin"
+    Referrer-Policy = "no-referrer"
     Permissions-Policy = "geolocation=(), microphone=(), camera=()"
