@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="el">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Αξιολόγηση Κατηγοριοποίησης των διηγημάτων του Αλέξανδρου Παπαδιαμάντη</title>
+  <link rel="stylesheet" href="assets/style.css" />
+  <style>
+    /* keeps admin switcher hidden unless JS turns it on */
+    #adminExpertPicker { display:none; margin-top:14px; }
+    .expert-links { display:flex; gap:8px; flex-wrap:wrap; }
+    .btn.small { padding:6px 10px; border-radius:10px; font-size:13px; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-title">Αξιολόγηση Κατηγοριοποίησης των διηγημάτων του Αλέξανδρου Παπαδιαμάντη</div>
+      <div class="brand-sub">Expert evaluation (A/B/C) — clusters & pairs</div>
+    </div>
+    <div class="meta">
+      <div id="expertBadge" class="badge">Expert: —</div>
+      <div id="progressBadge" class="badge">0%</div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section id="screenWelcome" class="card">
+      <div class="welcome">
+        <img src="assets/papadiamantis.png" alt="Alexandros Papadiamantis" class="hero-img" />
+        <h1>Welcome / Καλώς ορίσατε</h1>
+
+        <p>
+          Thank you for participating in the evaluation of the categorization of Alexandros Papadiamantis' short stories.
+          Your opinions will help us assess thematic coherence across alternative clusterings.
+        </p>
+
+        <p>
+          Ευχαριστούμε για τη συμμετοχή στην αξιολόγηση κατηγοριοποιήσεων των διηγημάτων του Αλέξανδρου Παπαδιαμάντη.
+          Οι κρίσεις σας θα μας βοηθήσουν να εκτιμήσουμε τη θεματική συνοχή στο έργο του.
+        </p>
+      </div>
+
+      <h2>Τι θα κάνετε</h2>
+      <ul>
+        <li>
+          <strong>Αξιολόγηση έργων μέσα σε ομάδες (clusters):</strong>
+          Για κάθε έργο βαθμολογείτε τη θεματική συνάφεια (1–5) και επισημαίνετε «εκτός ομάδας» όπου χρειάζεται.
+          Προαιρετικά προσθέτετε ετικέτα/σχόλιο για το θέμα της ομάδας.
+        </li>
+        <li>
+          <strong>Αξιολόγηση ζευγών έργων:</strong>
+          Βαθμολογείτε τη θεματική συγγένεια (1–5). Αν βάλετε 4 ή 5, γράφετε το κοινό θεματικό στοιχείο (1–2 φράσεις).
+        </li>
+      </ul>
+
+      <h2>Ανώνυμα δεδομένα & εθελοντική συμμετοχή</h2>
+      <p>
+        Καταγράφονται μόνο οι απαντήσεις αξιολόγησης και ένας ανώνυμος κωδικός συμμετοχής (π.χ. E1).
+        Η συμμετοχή είναι εθελοντική και μπορείτε να διακόψετε οποιαδήποτε στιγμή.
+      </p>
+
+      <div class="consent">
+        <label class="checkbox">
+          <input type="checkbox" id="consentCheck" />
+          <span>Συμφωνώ να συμμετέχω και να χρησιμοποιηθούν οι απαντήσεις μου για ερευνητικούς σκοπούς.</span>
+        </label>
+      </div>
+
+      <div class="actions">
+        <button id="btnStart" class="btn primary" disabled>Έναρξη</button>
+      </div>
+
+      <!-- Admin expert switcher (ONLY when URL has &admin=1) -->
+      <div id="adminExpertPicker" class="card" style="margin-top:16px;">
+        <h2>Admin: Expert switcher</h2>
+        <div id="expertLinks" class="expert-links"></div>
+        <p class="muted">Visible only when URL has <code>&admin=1</code>.</p>
+      </div>
+    </section>
+
+    <section id="screenTask" class="card hidden">
+      <div class="task-header">
+        <div>
+          <div id="taskType" class="kicker">TASK</div>
+          <h1 id="taskTitle">—</h1>
+          <div id="taskSubtitle" class="muted">—</div>
+        </div>
+        <div class="task-nav">
+          <button id="btnBack" class="btn">Πίσω</button>
+          <button id="btnNext" class="btn primary">Επόμενο</button>
+        </div>
+      </div>
+      <div id="taskBody"></div>
+    </section>
+
+    <section id="screenSubmit" class="card hidden">
+      <h1>Υποβολή</h1>
+      <p>Πατήστε «Υποβολή» για να σταλούν οι απαντήσεις.</p>
+      <div class="actions">
+        <button id="btnReview" class="btn">Επιστροφή</button>
+        <button id="btnSubmit" class="btn primary">Υποβολή</button>
+      </div>
+      <div id="submitStatus" class="muted" style="margin-top:10px;"></div>
+    </section>
+
+    <section id="screenThanks" class="card hidden">
+      <h1>Ευχαριστούμε!</h1>
+      <p>Η υποβολή ολοκληρώθηκε. Μπορείτε να κλείσετε αυτό το παράθυρο.</p>
+    </section>
+
+    <!-- Hidden iframe target so form submit doesn't navigate away -->
+    <iframe name="netlify_iframe" style="display:none;"></iframe>
+
+    <!-- Netlify form: MUST exist in HTML at build time -->
+    <form id="netlifyForm"
+          name="papadiamantis-eval"
+          method="POST"
+          action="."
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          target="netlify_iframe"
+          style="display:none;">
+      <input type="hidden" name="form-name" value="papadiamantis-eval" />
+      <p style="display:none;"><label>Don’t fill this out: <input name="bot-field" /></label></p>
+
+      <input type="text" name="expert_id" />
+      <input type="text" name="assignment_id" />
+      <input type="text" name="app_version" />
+      <input type="text" name="submission_uuid" />
+      <input type="text" name="client_session_id" />
+      <textarea name="payload"></textarea>
+    </form>
+
+  </main>
+
+  <footer class="footer">
+    <div>© Dimitrios Papadakis / Research prototype — Netlify Forms</div>
+    <div class="muted">A/B/C are blinded clusterings.</div>
+  </footer>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>
